@@ -17,14 +17,14 @@ const projects = [
     id: 2,
     title: "Sri Hari Residency",
     category: "Modern Living",
-    image: "https://images.unsplash.com/photo-1628744276520-6733a71b1236?auto=format&fit=crop&q=80&w=1200",
+    image: "/projects/project2.png",
     location: "Ramanathapuram, Coimbatore",
   },
   {
     id: 3,
     title: "Heritage Enclave",
     category: "Premium Villa",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200",
+    image: "/projects/project3.png",
     location: "Peelamedu, Coimbatore",
   },
 ];

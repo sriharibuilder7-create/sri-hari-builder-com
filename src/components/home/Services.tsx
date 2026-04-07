@@ -71,8 +71,20 @@ export const Services = () => {
               <p className="text-off-white/90 text-sm leading-relaxed mb-8 group-hover:text-white transition-colors">
                 {service.description}
               </p>
-              <Link href="/services" className="text-gold text-xs uppercase tracking-[0.3em] font-bold group-hover:pl-4 transition-all duration-500 inline-block">
-                Learn More →
+              <Link 
+                href="/services" 
+                className="inline-flex items-center gap-3 text-gold text-[10px] uppercase tracking-[0.3em] font-bold group/btn"
+              >
+                <span className="relative">
+                  Learn More
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold transition-all duration-300 group-hover/btn:w-full" />
+                </span>
+                <div className="w-8 h-8 rounded-full border border-gold/20 flex items-center justify-center transition-all duration-300 group-hover/btn:bg-gold group-hover/btn:text-charcoal group-hover/btn:border-gold">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
               </Link>
             </motion.div>
           ))}
