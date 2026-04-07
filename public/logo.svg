@@ -1,0 +1,14 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="92" stroke="#F5A623" stroke-width="8"/>
+  <circle cx="100" cy="100" r="84" stroke="white" stroke-width="2"/>
+  
+  {/* Stylized Buildings/Arches */}
+  <path d="M50 140 L60 80 Q65 70 75 80 L85 140" stroke="#4A4A4A" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M75 140 L85 90 Q90 80 100 90 L110 140" stroke="#4A4A4A" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M100 140 Q120 70 170 120" stroke="#4A4A4A" stroke-width="4" stroke-dasharray="2 4" stroke-linecap="round" fill="none"/>
+  
+  <line x1="45" y1="140" x2="165" y2="140" stroke="#4A4A4A" stroke-width="3" stroke-linecap="round"/>
+  
+  <text x="125" y="130" font-family="serif" font-weight="900" font-size="28" fill="#8B0000" style="letter-spacing: -1px;">SHB</text>
+  <text x="172" y="115" font-family="sans-serif" font-weight="bold" font-size="7" fill="#8B0000">TM</text>
+</svg>
