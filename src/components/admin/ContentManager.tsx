@@ -192,7 +192,7 @@ export const ContentManager = ({ section }: { section: string }) => {
                 <p className="text-charcoal/60 text-sm leading-relaxed line-clamp-3">{item.description}</p>
                 <div className="mt-6 pt-6 border-t border-charcoal/5 flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-charcoal/30">
                   <span>SHB Official</span>
-                  <span>{item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString() : "Syncing..."}</span>
+                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
                 </div>
               </div>
             </div>

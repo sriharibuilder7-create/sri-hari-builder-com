@@ -142,13 +142,6 @@ export const ConstructionProgress = () => {
                             <h3 className="text-white text-lg md:text-2xl font-serif leading-tight mb-1">
                               {item.title || "Engineering Update"}
                             </h3>
-                            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
-                              {item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString(undefined, {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric'
-                              }) : "Syncing..."}
-                            </p>
                           </div>
 
                           <p className="text-white/70 text-xs leading-relaxed italic line-clamp-1">
