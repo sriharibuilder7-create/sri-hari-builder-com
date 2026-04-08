@@ -25,8 +25,12 @@ const db = getFirestore(app);
 // Analytics initialization (client-side only)
 let analytics: any = null;
 if (typeof window !== "undefined") {
-  const { getAnalytics } = require("firebase/analytics");
-  analytics = getAnalytics(app);
+  const { getAnalytics, isSupported } = require("firebase/analytics");
+  isSupported().then((supported: boolean) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
 }
 
 export { auth, db, analytics };
