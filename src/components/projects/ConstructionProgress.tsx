@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -31,28 +31,26 @@ export const ConstructionProgress = () => {
   const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
 
   useEffect(() => {
-    const fetchProgress = async () => {
-      setLoading(true);
-      try {
-        const q = query(
-          collection(db, "progress"),
-          where("section", "==", activeStage),
-          orderBy("createdAt", "desc")
-        );
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as ProgressItem[];
-        setItems(data);
-      } catch (error) {
-        console.error("Error fetching progress:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setLoading(true);
+    const q = query(
+      collection(db, "progress"),
+      where("section", "==", activeStage),
+      orderBy("createdAt", "desc")
+    );
 
-    fetchProgress();
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as ProgressItem[];
+      setItems(data);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching progress:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, [activeStage]);
 
   return (
@@ -145,11 +143,11 @@ export const ConstructionProgress = () => {
                               {item.title || "Engineering Update"}
                             </h3>
                             <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
-                              {new Date(item.createdAt?.seconds * 1000).toLocaleDateString(undefined, {
+                              {item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString(undefined, {
                                 month: 'long',
                                 day: 'numeric',
                                 year: 'numeric'
-                              })}
+                              }) : "Syncing..."}
                             </p>
                           </div>
 

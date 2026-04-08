@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { 
   collection, 
   addDoc, 
-  getDocs, 
+  onSnapshot, 
   query, 
   where, 
   orderBy, 
@@ -42,34 +42,32 @@ export const ContentManager = ({ section }: { section: string }) => {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    fetchItems();
-  }, [section]);
-
-  const fetchItems = async () => {
     setLoading(true);
-    try {
-      const q = query(
-        collection(db, "progress"),
-        where("section", "==", section),
-        orderBy("createdAt", "desc")
-      );
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map(doc => ({
+    const q = query(
+      collection(db, "progress"),
+      where("section", "==", section),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as ContentItem[];
       setItems(data);
-    } catch (error: any) {
+      setLoading(false);
+    }, (error: any) => {
       console.error("Error fetching items:", error);
       if (error.code === "failed-precondition") {
-        toast.error("Firestore Index needed! Check browser console for the link.", { duration: 6000 });
+        toast.error("Firestore Index needed! Check console.");
       } else {
         toast.error("Failed to load content");
       }
-    } finally {
       setLoading(false);
-    }
-  };
+    });
+
+    return () => unsubscribe();
+  }, [section]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -111,7 +109,6 @@ export const ContentManager = ({ section }: { section: string }) => {
       }
 
       resetForm();
-      fetchItems();
     } catch (error) {
       toast.error("Failed to save content");
     } finally {
@@ -124,7 +121,6 @@ export const ContentManager = ({ section }: { section: string }) => {
     try {
       await deleteDoc(doc(db, "progress", id));
       toast.success("Deleted successfully");
-      fetchItems();
     } catch (error) {
       toast.error("Delete failed");
     }
@@ -196,7 +192,7 @@ export const ContentManager = ({ section }: { section: string }) => {
                 <p className="text-charcoal/60 text-sm leading-relaxed line-clamp-3">{item.description}</p>
                 <div className="mt-6 pt-6 border-t border-charcoal/5 flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-charcoal/30">
                   <span>SHB Official</span>
-                  <span>{new Date(item.createdAt?.seconds * 1000).toLocaleDateString()}</span>
+                  <span>{item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString() : "Syncing..."}</span>
                 </div>
               </div>
             </div>
@@ -228,7 +224,11 @@ export const ContentManager = ({ section }: { section: string }) => {
                     <>
                       <Image src={preview} alt="Preview" fill className="object-cover" />
                       <div className="absolute inset-0 bg-charcoal/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs uppercase tracking-widest font-bold transition-opacity">
-                        Change Image
+                        {editingItem?.createdAt ? new Date(editingItem.createdAt.seconds * 1000).toLocaleDateString(undefined, {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        }) : "Processing..."}
                       </div>
                     </>
                   ) : (
