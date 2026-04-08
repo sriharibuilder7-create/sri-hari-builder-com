@@ -19,8 +19,8 @@ import toast from "react-hot-toast";
 const navItems = [
   { name: "Basement Level", icon: <Layers size={18} />, query: "basement-level" },
   { name: "Lintel Level", icon: <Package size={18} />, query: "lintel-level" },
-  { name: "Sill Level Concrete", icon: <BarChart3 size={18} />, query: "sill-level-concrete" },
-  { name: "Still Level Concrete", icon: <BarChart3 size={18} />, query: "still-level-concrete" },
+  { name: "Sill Level", icon: <BarChart3 size={18} />, query: "sill-level-concrete" },
+  { name: "Still Level", icon: <BarChart3 size={18} />, query: "still-level-concrete" },
 ];
 
 export const AdminSidebar = () => {

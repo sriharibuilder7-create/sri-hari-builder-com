@@ -82,56 +82,110 @@ export const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center space-y-10 md:hidden pt-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-charcoal/95 backdrop-blur-2xl flex flex-col md:hidden overflow-y-auto"
           >
-            <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-               <Image 
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800" 
-                alt="Bg" 
-                fill
-                className="object-cover"
-              />
-            </div>
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
             
-            {navLinks.map((link, idx) => (
+            <div className="container mx-auto px-10 pt-32 pb-20 flex flex-col min-h-full">
+              {/* Primary Links */}
+              <div className="space-y-6 mb-16">
+                <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Navigation</p>
+                {navLinks.map((link, idx) => (
+                  <motion.div
+                    key={link.name}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 * idx }}
+                  >
+                    <Link 
+                      href={link.href} 
+                      onClick={() => setIsOpen(false)}
+                      className="text-4xl font-serif text-white hover:text-gold transition-colors inline-block"
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Sub-Navigation Categories */}
+              <div className="grid grid-cols-1 gap-12 mb-16">
+                {/* User Requested: Portfolio Sub-headings */}
+                <div className="space-y-6">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Portfolio Categories</p>
+                  <div className="grid grid-cols-1 gap-4">
+                    {["Luxury Apartments", "Modern Living", "Premium Villas"].map((cat, idx) => (
+                      <motion.div
+                        key={cat}
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.5 + (0.1 * idx) }}
+                      >
+                        <Link 
+                          href="/projects" 
+                          onClick={() => setIsOpen(false)}
+                          className="text-sm uppercase tracking-[0.2em] text-white/60 hover:text-gold flex items-center gap-3 group"
+                        >
+                          <span className="w-6 h-[1px] bg-gold/30 group-hover:w-8 group-hover:bg-gold transition-all" />
+                          {cat}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Construction Stages */}
+                <div className="space-y-6">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Site Progress</p>
+                  <div className="grid grid-cols-1 gap-4">
+                    {["Basement Level", "Lintel Level", "Sill Level", "Still Level"].map((cat, idx) => (
+                      <motion.div
+                        key={cat}
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.7 + (0.1 * idx) }}
+                      >
+                        <Link 
+                          href="/projects" 
+                          onClick={() => setIsOpen(false)}
+                          className="text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-gold flex items-center gap-3 group"
+                        >
+                          <span className="w-4 h-[1px] bg-gold/20 group-hover:w-6 group-hover:bg-gold transition-all" />
+                          {cat}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Actions */}
               <motion.div
-                key={link.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * idx + 0.3 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.1 }}
+                className="mt-auto pt-10 border-t border-white/5 flex flex-col gap-8"
               >
                 <Link 
-                  href={link.href} 
+                  href="/contact" 
                   onClick={() => setIsOpen(false)}
-                  className="text-3xl font-serif text-white hover:text-gold transition-colors"
+                  className="w-full py-5 bg-gold text-charcoal font-bold uppercase tracking-widest text-xs text-center shadow-lg shadow-gold/10"
                 >
-                  {link.name}
+                  Book a Consultation
                 </Link>
+                
+                <div className="flex justify-between items-center text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold">
+                  <span>Coimbatore, TN</span>
+                  <a href="tel:+919876543210" className="text-gold opacity-60 hover:opacity-100 transition-opacity flex items-center gap-2">
+                    <Phone size={10} /> +91 98765 43210
+                  </a>
+                </div>
               </motion.div>
-            ))}
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="pt-10 flex flex-col items-center gap-6"
-            >
-              <Link 
-                href="/contact" 
-                onClick={() => setIsOpen(false)}
-                className="px-10 py-4 bg-gold text-charcoal font-bold uppercase tracking-widest text-xs"
-              >
-                Consult Now
-              </Link>
-              <a href="tel:+919876543210" className="flex items-center gap-3 text-gold/60 text-sm">
-                <Phone size={16} />
-                +91 98765 43210
-              </a>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

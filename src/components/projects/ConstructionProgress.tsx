@@ -28,6 +28,8 @@ export const ConstructionProgress = () => {
   const [items, setItems] = useState<ProgressItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
+
   useEffect(() => {
     const fetchProgress = async () => {
       setLoading(true);
@@ -109,63 +111,66 @@ export const ConstructionProgress = () => {
                 {items.map((item, index) => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ 
                       opacity: 1, 
-                      scale: 1, 
                       y: 0,
-                      transition: { delay: index * 0.1, duration: 0.6, ease: "easeOut" } 
+                      transition: { delay: index * 0.1, duration: 0.8, ease: "easeOut" } 
                     }}
                     className="group relative"
                   >
-                    {/* Shading/Inner Glow Effect */}
-                    <div className="absolute -inset-[1px] bg-gradient-to-tr from-gold/20 via-transparent to-white/10 rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[2px]" />
-                    
-                    <div className="relative bg-[#1a1a1a] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-                      {/* Image Wrapper */}
-                      <div className="relative h-72 overflow-hidden">
-                        <Image 
-                          src={item.imageUrl} 
-                          alt={item.title || "Progress Update"} 
-                          fill 
-                          className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent opacity-60" />
-                        
-                        {/* Status Badge */}
-                        <div className="absolute top-6 left-6 flex items-center gap-2 bg-charcoal/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                          <CheckCircle2 size={12} className="text-gold" />
-                          <span className="text-[10px] uppercase font-bold tracking-widest text-off-white">Verified</span>
-                        </div>
-                      </div>
+                    {/* Project-style Card Layout */}
+                    <div className="relative h-[650px] overflow-hidden rounded-[40px] shadow-2xl border border-white/5 bg-white/5">
+                      <Image 
+                        src={item.imageUrl} 
+                        alt={item.title || "Progress Update"} 
+                        fill 
+                        className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0"
+                      />
+                      
+                      {/* Dark Overlay for Text Visibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent opacity-80" />
+                      
+                      {/* Luxury Content Overlay */}
+                      <div className="absolute inset-x-6 bottom-6 p-8 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[32px] transform transition-all duration-700 ease-out">
+                        <div className="flex flex-col gap-6">
+                          <div>
+                            <div className="flex items-center gap-3 mb-4">
+                              <span className="w-8 h-[1px] bg-gold" />
+                              <span className="text-gold uppercase tracking-[0.4em] text-[10px] font-bold">
+                                {stageName.replace("Progress", "")}
+                              </span>
+                            </div>
+                            <h3 className="text-white text-3xl font-serif leading-tight mb-2">
+                              {item.title || "Engineering Update"}
+                            </h3>
+                            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
+                              {new Date(item.createdAt?.seconds * 1000).toLocaleDateString(undefined, {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                            </p>
+                          </div>
 
-                      {/* Info */}
-                      <div className="p-8">
-                        <div className="flex items-center gap-3 mb-6 text-gold/40">
-                          <Calendar size={14} />
-                          <span className="text-[10px] uppercase font-bold tracking-widest leading-none">
-                            {new Date(item.createdAt?.seconds * 1000).toLocaleDateString(undefined, {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric'
-                            })}
-                          </span>
-                        </div>
+                          <p className="text-white/70 text-sm leading-relaxed italic line-clamp-2">
+                            "{item.description}"
+                          </p>
 
-                        <h3 className="text-2xl font-serif text-white mb-4 group-hover:text-gold transition-colors duration-500">
-                          {item.title || "Site Progress Update"}
-                        </h3>
-                        
-                        <p className="text-off-white/50 text-sm leading-relaxed mb-8 line-clamp-3 font-light italic">
-                          "{item.description}"
-                        </p>
-
-                        <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-                           <div className="flex items-center gap-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                             <span className="text-[8px] uppercase tracking-widest font-bold text-white/20">Live Sync</span>
-                           </div>
-                           <span className="text-[8px] uppercase tracking-widest font-extrabold text-gold opacity-40 group-hover:opacity-100 transition-opacity">Engineering Log</span>
+                          {/* Specifications - Matching Portfolio Design */}
+                          <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1 font-bold">Milestone</p>
+                              <p className="text-gold text-xs font-serif uppercase tracking-wider">{stageName.split(" ")[0]}</p>
+                            </div>
+                            <div>
+                              <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1 font-bold">Verification</p>
+                              <div className="flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                                <p className="text-white text-[10px] uppercase tracking-widest font-bold">SHB Official</p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

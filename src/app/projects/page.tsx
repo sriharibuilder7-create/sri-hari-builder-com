@@ -21,10 +21,10 @@ export default function ProjectsPage() {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-5xl md:text-7xl font-serif text-white mb-6">
-            Our <span className="text-gold italic">Legacy</span>
+            Iconic <span className="text-gold italic">Landmarks</span>
           </h1>
           <p className="text-off-white/90 max-w-2xl mx-auto uppercase tracking-widest text-xs font-bold leading-relaxed">
-            From iconic landmarks to real-time site updates. <br /> Explore the engineering excellence of Sri Hari Builders.
+            Engineering Excellence & Generation Legacies. <br /> Explore the craft behind Sri Hari Builders.
           </p>
         </motion.div>
 
@@ -45,7 +45,7 @@ export default function ProjectsPage() {
                 activeTab === "progress" ? "bg-gold text-charcoal shadow-lg shadow-gold/20" : "text-white/40 hover:text-white"
               }`}
             >
-              Live Progress
+              Engineering in Motion
             </button>
           </div>
         </div>
