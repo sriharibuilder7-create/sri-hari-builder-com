@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { 
@@ -17,15 +17,17 @@ import {
 import toast from "react-hot-toast";
 
 const navItems = [
-  { name: "Basement Level", icon: <Layers size={18} />, query: "basement" },
-  { name: "Lintel Level", icon: <Package size={18} />, query: "lintel" },
-  { name: "Sill Level Concrete", icon: <BarChart3 size={18} />, query: "sill" },
-  { name: "Still Level Concrete", icon: <BarChart3 size={18} />, query: "still" },
+  { name: "Basement Level", icon: <Layers size={18} />, query: "basement-level" },
+  { name: "Lintel Level", icon: <Package size={18} />, query: "lintel-level" },
+  { name: "Sill Level Concrete", icon: <BarChart3 size={18} />, query: "sill-level-concrete" },
+  { name: "Still Level Concrete", icon: <BarChart3 size={18} />, query: "still-level-concrete" },
 ];
 
 export const AdminSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentSection = searchParams.get("section") || "basement-level";
 
   const handleLogout = async () => {
     try {
@@ -58,7 +60,7 @@ export const AdminSidebar = () => {
             key={item.query}
             href={`/admin/dashboard?section=${item.query}`}
             className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-300 group ${
-              pathname === "/admin/dashboard" && (new URLSearchParams(window.location.search)).get("section") === item.query
+              pathname === "/admin/dashboard" && currentSection === item.query
                 ? "bg-gold text-charcoal font-bold"
                 : "hover:bg-white/5 text-white/60 hover:text-white"
             }`}

@@ -151,7 +151,7 @@ export const ContentManager = ({ section }: { section: string }) => {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-serif text-charcoal capitalize">{section.replace("-", " ")} Progress</h2>
+          <h2 className="text-3xl font-serif text-charcoal capitalize">{section.replace(/-/g, " ")} Progress</h2>
           <p className="text-charcoal/40 text-xs uppercase tracking-widest font-bold mt-2">Manage updates for this stage</p>
         </div>
         <button 

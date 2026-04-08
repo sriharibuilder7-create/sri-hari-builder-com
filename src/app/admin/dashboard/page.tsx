@@ -1,5 +1,8 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ContentManager } from "@/components/admin/ContentManager";
@@ -7,7 +10,7 @@ import { Loader2 } from "lucide-react";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const section = searchParams.get("section") || "basement";
+  const section = searchParams.get("section") || "basement-level";
 
   return <ContentManager section={section} />;
 }

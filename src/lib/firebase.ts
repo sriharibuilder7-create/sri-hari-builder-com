@@ -17,15 +17,25 @@ if (typeof window !== "undefined" && !firebaseConfig.apiKey) {
   console.warn("⚠️ Firebase API Key is missing. Did you restart 'npm run dev' after adding .env?");
 }
 
-// Initialize Firebase
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Initialize Firebase services only if config is valid (Build Safety)
+let app: any;
+let auth: any;
+let db: any;
+
+if (firebaseConfig.apiKey) {
+  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} else {
+  // Mock instances for build phase to prevent crashes
+  auth = {} as any;
+  db = {} as any;
+}
 
 // Analytics initialization (client-side only)
 let analytics: any = null;
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && app) {
   (async () => {
     try {
       const { getAnalytics, isSupported } = await import("firebase/analytics");
