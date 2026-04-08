@@ -117,51 +117,64 @@ export const ConstructionProgress = () => {
                     }}
                     className="group relative"
                   >
-                    {/* Project-style Card Layout */}
-                    <div className="relative h-[450px] md:h-[550px] overflow-hidden rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/5 bg-white/5 group">
-                      <Image 
-                        src={item.imageUrl} 
-                        alt={item.title || "Progress Update"} 
-                        fill 
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0"
-                      />
+                    {/* Refined Split-Card Architecture */}
+                    <div className="flex flex-col h-[550px] md:h-[650px] overflow-hidden rounded-[40px] shadow-2xl border border-white/5 bg-white/5 group transition-all duration-700 hover:border-gold/20">
+                      {/* Image Zone (60% Height) */}
+                      <div className="relative h-[60%] w-full overflow-hidden">
+                        <Image 
+                          src={item.imageUrl} 
+                          alt={item.title || "Progress Update"} 
+                          fill 
+                          className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-charcoal/10 group-hover:bg-transparent transition-colors duration-700" />
+                      </div>
                       
-                      {/* Elegant Bottom Gradient for Text Legibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
-                      
-                      {/* Sleek, Bottom-Blended Content Area */}
-                      <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 transform transition-all duration-700 ease-out">
-                        <div className="flex flex-col gap-4">
-                          <div>
-                            <div className="flex items-center gap-3 mb-2">
-                              <span className="w-6 h-[1px] bg-gold" />
+                      {/* Content Zone (40% Height) - Solid & Legible */}
+                      <div className="flex-1 p-8 md:p-10 bg-[#121212] relative overflow-hidden">
+                        <div className="flex flex-col h-full justify-between">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <span className="w-4 h-[1px] bg-gold" />
                               <span className="text-gold uppercase tracking-[0.4em] text-[8px] font-bold">
                                 {stageName.replace("Progress", "")}
                               </span>
                             </div>
-                            <h3 className="text-white text-xl md:text-3xl font-serif leading-tight">
-                              {item.title || "Engineering Update"}
+                            <h3 className="text-white text-xl md:text-2xl font-serif leading-tight">
+                              {item.title || "Engineering Milestone"}
                             </h3>
+                            <p className="text-white/60 text-xs leading-relaxed italic line-clamp-3">
+                              "{item.description}"
+                            </p>
                           </div>
 
-                          <p className="text-white/80 text-sm leading-relaxed italic max-w-xl">
-                            "{item.description}"
-                          </p>
-
-                          {/* Specifications - Minified and Elegant */}
-                          <div className="pt-6 flex gap-8 items-center border-t border-white/5">
-                            <div>
-                              <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Milestone</p>
-                              <p className="text-gold text-[10px] uppercase tracking-wider font-bold">{stageName.split(" ")[0]}</p>
+                          {/* Specifications - High Precision Layout */}
+                          <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                            <div className="flex gap-8">
+                              <div>
+                                <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Stage</p>
+                                <p className="text-gold text-[10px] uppercase tracking-wider font-bold italic">{stageName.split(" ")[0]}</p>
+                              </div>
+                              <div>
+                                <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Verification</p>
+                                <div className="flex items-center gap-2">
+                                  <p className="text-white text-[8px] uppercase tracking-widest font-bold">SHB Official</p>
+                                  <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Signature</p>
-                              <div className="flex items-center gap-2">
-                                <p className="text-white text-[9px] uppercase tracking-widest font-bold">SHB Official</p>
-                                <span className="w-1 h-1 rounded-full bg-gold" />
+                            
+                            <div className="hidden md:block">
+                              <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold transition-colors duration-500">
+                                <CheckCircle2 size={14} className="text-white/20 group-hover:text-gold transition-colors" />
                               </div>
                             </div>
                           </div>
+                        </div>
+                        
+                        {/* Decorative background element */}
+                        <div className="absolute -right-4 -bottom-4 text-[120px] font-serif italic text-white/[0.02] pointer-events-none select-none">
+                          SHB
                         </div>
                       </div>
                     </div>
