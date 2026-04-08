@@ -120,7 +120,7 @@ export const ConstructionProgress = () => {
                     className="group relative"
                   >
                     {/* Project-style Card Layout */}
-                    <div className="relative h-[650px] overflow-hidden rounded-[40px] shadow-2xl border border-white/5 bg-white/5">
+                    <div className="relative h-[550px] md:h-[650px] overflow-hidden rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/5 bg-white/5">
                       <Image 
                         src={item.imageUrl} 
                         alt={item.title || "Progress Update"} 
@@ -132,7 +132,7 @@ export const ConstructionProgress = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent opacity-80" />
                       
                       {/* Luxury Content Overlay */}
-                      <div className="absolute inset-x-6 bottom-6 p-8 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[32px] transform transition-all duration-700 ease-out">
+                      <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 p-6 md:p-8 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[24px] md:rounded-[32px] transform transition-all duration-700 ease-out">
                         <div className="flex flex-col gap-6">
                           <div>
                             <div className="flex items-center gap-3 mb-4">
@@ -141,7 +141,7 @@ export const ConstructionProgress = () => {
                                 {stageName.replace("Progress", "")}
                               </span>
                             </div>
-                            <h3 className="text-white text-3xl font-serif leading-tight mb-2">
+                            <h3 className="text-white text-xl md:text-3xl font-serif leading-tight mb-2">
                               {item.title || "Engineering Update"}
                             </h3>
                             <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">

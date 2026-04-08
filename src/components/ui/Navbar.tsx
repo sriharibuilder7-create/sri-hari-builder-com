@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ChevronDown } from "lucide-react";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -23,6 +23,59 @@ export const Navbar = () => {
     { name: "Services", href: "/services" },
     { name: "Contact", href: "/contact" },
   ];
+
+  const MobileAccordion = ({ title, items, onItemClick }: { title: string, items: string[], onItemClick: () => void }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    
+    return (
+      <div className="border-b border-white/5 py-4">
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full flex justify-between items-center text-left"
+        >
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">{title}</span>
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-gold opacity-50"
+          >
+            <ChevronDown size={16} />
+          </motion.div>
+        </button>
+        
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-6 pb-2 space-y-4">
+                {items.map((item, idx) => (
+                  <motion.div
+                    key={item}
+                    initial={{ x: -10, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.05 * idx }}
+                  >
+                    <Link 
+                      href="/projects" 
+                      onClick={onItemClick}
+                      className="text-sm uppercase tracking-[0.2em] text-white/50 hover:text-gold flex items-center gap-3 group"
+                    >
+                      <span className="w-4 h-[1px] bg-gold/20 group-hover:w-6 group-hover:bg-gold transition-all" />
+                      {item}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -93,13 +146,13 @@ export const Navbar = () => {
             <div className="container mx-auto px-10 pt-32 pb-20 flex flex-col min-h-full">
               {/* Primary Links */}
               <div className="space-y-6 mb-16">
-                <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Navigation</p>
+                <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8 opacity-50">Main Navigation</p>
                 {navLinks.map((link, idx) => (
                   <motion.div
                     key={link.name}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.1 * idx }}
+                    transition={{ delay: 0.05 * idx }}
                   >
                     <Link 
                       href={link.href} 
@@ -112,62 +165,26 @@ export const Navbar = () => {
                 ))}
               </div>
 
-              {/* Sub-Navigation Categories */}
-              <div className="grid grid-cols-1 gap-12 mb-16">
-                {/* User Requested: Portfolio Sub-headings */}
-                <div className="space-y-6">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Portfolio Categories</p>
-                  <div className="grid grid-cols-1 gap-4">
-                    {["Luxury Apartments", "Modern Living", "Premium Villas"].map((cat, idx) => (
-                      <motion.div
-                        key={cat}
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 + (0.1 * idx) }}
-                      >
-                        <Link 
-                          href="/projects" 
-                          onClick={() => setIsOpen(false)}
-                          className="text-sm uppercase tracking-[0.2em] text-white/60 hover:text-gold flex items-center gap-3 group"
-                        >
-                          <span className="w-6 h-[1px] bg-gold/30 group-hover:w-8 group-hover:bg-gold transition-all" />
-                          {cat}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Construction Stages */}
-                <div className="space-y-6">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold mb-8">Site Progress</p>
-                  <div className="grid grid-cols-1 gap-4">
-                    {["Basement Level", "Lintel Level", "Sill Level", "Still Level"].map((cat, idx) => (
-                      <motion.div
-                        key={cat}
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.7 + (0.1 * idx) }}
-                      >
-                        <Link 
-                          href="/projects" 
-                          onClick={() => setIsOpen(false)}
-                          className="text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-gold flex items-center gap-3 group"
-                        >
-                          <span className="w-4 h-[1px] bg-gold/20 group-hover:w-6 group-hover:bg-gold transition-all" />
-                          {cat}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
+              {/* Sub-Navigation Accordions */}
+              <div className="space-y-4 mb-16">
+                <MobileAccordion 
+                  title="Portfolio Categories" 
+                  items={["Luxury Apartments", "Modern Living", "Premium Villas"]}
+                  onItemClick={() => setIsOpen(false)}
+                />
+                
+                <MobileAccordion 
+                  title="Engineering Logs" 
+                  items={["Basement Level", "Lintel Level", "Sill Level", "Still Level"]}
+                  onItemClick={() => setIsOpen(false)}
+                />
               </div>
 
               {/* Bottom Actions */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
+                transition={{ delay: 0.6 }}
                 className="mt-auto pt-10 border-t border-white/5 flex flex-col gap-8"
               >
                 <Link 

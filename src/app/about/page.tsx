@@ -22,7 +22,7 @@ export default function AboutPage() {
            transition={{ duration: 1 }}
         >
           <span className="text-gold uppercase tracking-[0.5em] text-xs font-bold mb-6 inline-block">The Legacy</span>
-          <h1 className="text-5xl md:text-8xl font-serif leading-tight mb-12 text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-8xl font-serif leading-tight mb-12 text-white">
             Built on <span className="text-gold italic underline decoration-white/10 underline-offset-8">Vision</span>,<br />Driven by <span className="text-white">Reputation</span>.
           </h1>
           <p className="text-off-white/80 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
@@ -92,7 +92,7 @@ export default function AboutPage() {
           </div>
         </motion.div>
         
-        <div className="relative h-[600px] overflow-hidden rounded-2xl group border border-white/10 shadow-2xl">
+        <div className="relative h-[400px] md:h-[600px] overflow-hidden rounded-2xl group border border-white/10 shadow-2xl">
           <Image 
             src="/about-engineering.png" 
             alt="Engineering Excellence" 
