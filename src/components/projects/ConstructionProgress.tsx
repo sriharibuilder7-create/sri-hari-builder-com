@@ -147,29 +147,6 @@ export const ConstructionProgress = () => {
                               "{item.description}"
                             </p>
                           </div>
-
-                          {/* Specifications - High Precision Layout */}
-                          <div className="pt-6 border-t border-white/5 flex items-center justify-between">
-                            <div className="flex gap-8">
-                              <div>
-                                <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Stage</p>
-                                <p className="text-gold text-[10px] uppercase tracking-wider font-bold italic">{stageName.split(" ")[0]}</p>
-                              </div>
-                              <div>
-                                <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Verification</p>
-                                <div className="flex items-center gap-2">
-                                  <p className="text-white text-[8px] uppercase tracking-widest font-bold">SHB Official</p>
-                                  <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="hidden md:block">
-                              <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold transition-colors duration-500">
-                                <CheckCircle2 size={14} className="text-white/20 group-hover:text-gold transition-colors" />
-                              </div>
-                            </div>
-                          </div>
                         </div>
                         
                         {/* Decorative background element */}

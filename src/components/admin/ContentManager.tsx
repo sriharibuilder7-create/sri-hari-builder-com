@@ -21,6 +21,7 @@ import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 
 const CATEGORIES = [
+  { id: "all", name: "All Categories", collection: "both" },
   { id: "portfolio", name: "Portfolio Showcase", collection: "portfolio" },
   { id: "basement-level", name: "Basement Level", collection: "progress" },
   { id: "lintel-level", name: "Lintel Level", collection: "progress" },
@@ -49,6 +50,7 @@ export const ContentManager = ({ section: initialSection }: { section: string })
   const [showSectionDropdown, setShowSectionDropdown] = useState(false);
   
   // Form State
+  const [formCategory, setFormCategory] = useState(CATEGORIES[1].id); // Default to Portfolio
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -57,25 +59,69 @@ export const ContentManager = ({ section: initialSection }: { section: string })
 
   useEffect(() => {
     setLoading(true);
-    const q = query(
-      collection(db, currentCollection),
-      where("section", "==", currentSection),
-      orderBy("createdAt", "desc")
-    );
+    
+    const fetchPromises = [];
+    if (currentCollection === "both" || currentCollection === "portfolio") {
+      const q = query(collection(db, "portfolio"), orderBy("createdAt", "desc"));
+      fetchPromises.push(new Promise((resolve) => onSnapshot(q, (s) => resolve(s.docs.map(doc => ({ id: doc.id, ...doc.data() }))), (e) => resolve([]))));
+    }
+    if (currentCollection === "both" || currentCollection === "progress") {
+      const q = currentSection === "all" 
+        ? query(collection(db, "progress"), orderBy("createdAt", "desc"))
+        : query(collection(db, "progress"), where("section", "==", currentSection), orderBy("createdAt", "desc"));
+      fetchPromises.push(new Promise((resolve) => onSnapshot(q, (s) => resolve(s.docs.map(doc => ({ id: doc.id, ...doc.data() }))), (e) => resolve([]))));
+    }
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as ContentItem[];
-      setItems(data);
-      setLoading(false);
-    }, (error: any) => {
-      console.error("Error fetching items:", error);
-      setLoading(false);
-    });
+    const unsubscribes: any[] = [];
+    
+    // For "All" view we combine both
+    if (currentSection === "all") {
+       const q1 = query(collection(db, "portfolio"), orderBy("createdAt", "desc"));
+       const q2 = query(collection(db, "progress"), orderBy("createdAt", "desc"));
+       
+       const unsub1 = onSnapshot(q1, (s1) => {
+         const pData = s1.docs.map(doc => ({ id: doc.id, type: 'portfolio', ...doc.data() })) as any[];
+         unsubscribes.push(unsub1);
+         setItems(prev => {
+            const others = prev.filter(p => (p as any).type !== 'portfolio');
+            return [...pData, ...others].sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) as ContentItem[];
+         });
+         setLoading(false);
+       });
 
-    return () => unsubscribe();
+       const unsub2 = onSnapshot(q2, (s2) => {
+         const progData = s2.docs.map(doc => ({ id: doc.id, type: 'progress', ...doc.data() })) as any[];
+         unsubscribes.push(unsub2);
+         setItems(prev => {
+            const others = prev.filter(p => (p as any).type !== 'progress');
+            return [...progData, ...others].sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) as ContentItem[];
+         });
+         setLoading(false);
+       });
+
+       return () => { unsub1(); unsub2(); };
+    } else {
+      const targetCol = CATEGORIES.find(c => c.id === currentSection)?.collection || "progress";
+      const q = query(
+        collection(db, targetCol),
+        where("section", "==", currentSection),
+        orderBy("createdAt", "desc")
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as ContentItem[];
+        setItems(data);
+        setLoading(false);
+      }, (error: any) => {
+        console.error("Error fetching items:", error);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    }
   }, [currentSection, currentCollection]);
 
   useEffect(() => {
@@ -121,19 +167,21 @@ export const ContentManager = ({ section: initialSection }: { section: string })
         imageUrl = await uploadToCloudinary(image);
       }
 
+      const targetCol = CATEGORIES.find(c => c.id === formCategory)?.collection || "progress";
       const data = {
         title,
         description,
         imageUrl,
-        section: currentSection,
+        section: formCategory,
         updatedAt: serverTimestamp(),
       };
 
       if (editingItem) {
-        await updateDoc(doc(db, currentCollection, editingItem.id), data);
+        const itemCol = (editingItem as any).type === 'portfolio' ? 'portfolio' : 'progress';
+        await updateDoc(doc(db, itemCol, editingItem.id), data);
         toast.success("Content updated successfully");
       } else {
-        await addDoc(collection(db, currentCollection), {
+        await addDoc(collection(db, targetCol), {
           ...data,
           createdAt: serverTimestamp(),
         });
@@ -148,10 +196,11 @@ export const ContentManager = ({ section: initialSection }: { section: string })
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (item: ContentItem) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      await deleteDoc(doc(db, currentCollection, id));
+      const targetCol = (item as any).type === 'portfolio' ? 'portfolio' : 'progress';
+      await deleteDoc(doc(db, targetCol, item.id));
       toast.success("Deleted successfully");
     } catch (error) {
       toast.error("Delete failed");
@@ -250,7 +299,7 @@ export const ContentManager = ({ section: initialSection }: { section: string })
                     <Edit2 size={16} />
                   </button>
                   <button 
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item)}
                     className="p-3 bg-white/90 backdrop-blur-md text-red-500 rounded-xl shadow-lg hover:bg-red-500 hover:text-white transition-all transform hover:scale-110"
                   >
                     <Trash2 size={16} />
@@ -258,27 +307,21 @@ export const ContentManager = ({ section: initialSection }: { section: string })
                 </div>
               </div>
 
-              {/* Content Zone - 100% Text Visibility */}
-              <div className="p-8 flex-1 flex flex-col justify-between bg-charcoal/[0.02]">
-                <div className="space-y-4">
+              {/* Content Zone - 100% Text Visibility (Clean view) */}
+              <div className="p-8 flex-1 flex flex-col items-start bg-charcoal/[0.02]">
+                <div className="space-y-4 w-full text-left">
                   <div className="flex items-center gap-3">
                     <span className="w-4 h-[1px] bg-gold" />
-                    <span className="text-gold uppercase tracking-[0.3em] text-[8px] font-bold">Verified entry</span>
+                    <span className="text-gold uppercase tracking-[0.3em] text-[8px] font-bold">
+                      {CATEGORIES.find(c => c.id === item.section)?.name || item.section}
+                    </span>
                   </div>
                   <h3 className="text-xl font-serif text-charcoal leading-tight capitalize">
-                    {item.title || "Construction Update"}
+                    {item.title || "Update"}
                   </h3>
                   <p className="text-charcoal/60 text-xs leading-relaxed italic border-l-2 border-gold/10 pl-4 py-1">
                     "{item.description}"
                   </p>
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-charcoal/5 flex justify-between items-center text-[8px] uppercase font-bold tracking-[0.2em] text-charcoal/30">
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                    SHB Official Record
-                  </span>
-                  <span>{new Date().toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}</span>
                 </div>
               </div>
             </div>
@@ -324,6 +367,19 @@ export const ContentManager = ({ section: initialSection }: { section: string })
                     </>
                   )}
                   <input id="img-upload" type="file" hidden accept="image/*" onChange={handleImageChange} />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-charcoal/40 uppercase tracking-widest block">Target Category</label>
+                  <select 
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value)}
+                    className="w-full bg-charcoal/5 border border-charcoal/10 rounded-xl py-3 px-4 text-charcoal focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
+                  >
+                    {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="space-y-2">
