@@ -69,6 +69,29 @@ export const ContentManager = ({ section }: { section: string }) => {
     return () => unsubscribe();
   }, [section]);
 
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      if (!isModalOpen) return;
+      const items = e.clipboardData?.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            const blob = items[i].getAsFile();
+            if (blob) {
+              const file = new File([blob], "pasted-image.png", { type: blob.type });
+              setImage(file);
+              setPreview(URL.createObjectURL(file));
+              toast.success("Image pasted from clipboard");
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [isModalOpen]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
       const file = e.target.files[0];
