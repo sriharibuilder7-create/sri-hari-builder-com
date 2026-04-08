@@ -118,7 +118,7 @@ export const ConstructionProgress = () => {
                     className="group relative"
                   >
                     {/* Project-style Card Layout */}
-                    <div className="relative h-[550px] md:h-[650px] overflow-hidden rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/5 bg-white/5">
+                    <div className="relative h-[450px] md:h-[550px] overflow-hidden rounded-[32px] md:rounded-[40px] shadow-2xl border border-white/5 bg-white/5 group">
                       <Image 
                         src={item.imageUrl} 
                         alt={item.title || "Progress Update"} 
@@ -126,12 +126,12 @@ export const ConstructionProgress = () => {
                         className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0"
                       />
                       
-                      {/* Dark Overlay for Text Visibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent opacity-80" />
+                      {/* Elegant Bottom Gradient for Text Legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
                       
-                      {/* Luxury Content Overlay */}
-                      <div className="absolute inset-x-4 md:inset-x-6 bottom-4 md:bottom-6 p-6 md:p-8 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[24px] md:rounded-[32px] transform transition-all duration-700 ease-out">
-                        <div className="flex flex-col gap-6">
+                      {/* Sleek, Bottom-Blended Content Area */}
+                      <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 transform transition-all duration-700 ease-out">
+                        <div className="flex flex-col gap-4">
                           <div>
                             <div className="flex items-center gap-3 mb-2">
                               <span className="w-6 h-[1px] bg-gold" />
@@ -139,26 +139,26 @@ export const ConstructionProgress = () => {
                                 {stageName.replace("Progress", "")}
                               </span>
                             </div>
-                            <h3 className="text-white text-lg md:text-2xl font-serif leading-tight mb-1">
+                            <h3 className="text-white text-xl md:text-3xl font-serif leading-tight">
                               {item.title || "Engineering Update"}
                             </h3>
                           </div>
 
-                          <p className="text-white/70 text-xs leading-relaxed italic line-clamp-1">
+                          <p className="text-white/80 text-sm leading-relaxed italic max-w-xl">
                             "{item.description}"
                           </p>
 
-                          {/* Specifications - Matching Portfolio Design */}
-                          <div className="pt-4 border-t border-white/10 grid grid-cols-2 gap-4">
+                          {/* Specifications - Minified and Elegant */}
+                          <div className="pt-6 flex gap-8 items-center border-t border-white/5">
                             <div>
                               <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Milestone</p>
-                              <p className="text-gold text-[10px] font-serif uppercase tracking-wider">{stageName.split(" ")[0]}</p>
+                              <p className="text-gold text-[10px] uppercase tracking-wider font-bold">{stageName.split(" ")[0]}</p>
                             </div>
                             <div>
-                              <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Verification</p>
+                              <p className="text-[7px] uppercase tracking-widest text-white/30 mb-1 font-bold">Signature</p>
                               <div className="flex items-center gap-2">
-                                <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                                <p className="text-white text-[8px] uppercase tracking-widest font-bold">SHB Official</p>
+                                <p className="text-white text-[9px] uppercase tracking-widest font-bold">SHB Official</p>
+                                <span className="w-1 h-1 rounded-full bg-gold" />
                               </div>
                             </div>
                           </div>

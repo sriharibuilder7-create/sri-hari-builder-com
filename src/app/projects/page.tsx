@@ -12,7 +12,7 @@ export default function ProjectsPage() {
   const [activeTab, setActiveTab] = useState<"portfolio" | "progress">("portfolio");
 
   return (
-    <main className="bg-charcoal min-h-screen pt-20">
+    <main className="bg-charcoal min-h-screen pt-20 relative overflow-visible">
       {/* Header */}
       <div className="py-20 text-center container mx-auto px-6">
         <motion.div
@@ -55,10 +55,11 @@ export default function ProjectsPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
-          initial={{ opacity: 0, x: activeTab === "portfolio" ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: activeTab === "portfolio" ? 20 : -20 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="relative min-h-[500px]"
         >
           {activeTab === "portfolio" ? <ProjectShowcase /> : <ConstructionProgress />}
         </motion.div>

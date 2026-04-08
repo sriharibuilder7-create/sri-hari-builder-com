@@ -18,6 +18,14 @@ import { uploadToCloudinary } from "@/lib/cloudinary";
 import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+
+const STAGES = [
+  { id: "basement-level", name: "Basement Level" },
+  { id: "lintel-level", name: "Lintel Level" },
+  { id: "sill-level-concrete", name: "Sill Level" },
+  { id: "still-level-concrete", name: "Still Level" },
+];
 
 interface ContentItem {
   id: string;
@@ -28,11 +36,13 @@ interface ContentItem {
   createdAt: any;
 }
 
-export const ContentManager = ({ section }: { section: string }) => {
+export const ContentManager = ({ section: initialSection, collectionName = "progress" }: { section: string, collectionName?: string }) => {
+  const [currentSection, setCurrentSection] = useState(initialSection);
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ContentItem | null>(null);
+  const [showSectionDropdown, setShowSectionDropdown] = useState(false);
   
   // Form State
   const [title, setTitle] = useState("");
@@ -44,8 +54,8 @@ export const ContentManager = ({ section }: { section: string }) => {
   useEffect(() => {
     setLoading(true);
     const q = query(
-      collection(db, "progress"),
-      where("section", "==", section),
+      collection(db, collectionName),
+      where("section", "==", currentSection),
       orderBy("createdAt", "desc")
     );
 
@@ -58,16 +68,11 @@ export const ContentManager = ({ section }: { section: string }) => {
       setLoading(false);
     }, (error: any) => {
       console.error("Error fetching items:", error);
-      if (error.code === "failed-precondition") {
-        toast.error("Firestore Index needed! Check console.");
-      } else {
-        toast.error("Failed to load content");
-      }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [section]);
+  }, [currentSection, collectionName]);
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -116,15 +121,15 @@ export const ContentManager = ({ section }: { section: string }) => {
         title,
         description,
         imageUrl,
-        section,
+        section: currentSection,
         updatedAt: serverTimestamp(),
       };
 
       if (editingItem) {
-        await updateDoc(doc(db, "progress", editingItem.id), data);
+        await updateDoc(doc(db, collectionName, editingItem.id), data);
         toast.success("Content updated successfully");
       } else {
-        await addDoc(collection(db, "progress"), {
+        await addDoc(collection(db, collectionName), {
           ...data,
           createdAt: serverTimestamp(),
         });
@@ -142,7 +147,7 @@ export const ContentManager = ({ section }: { section: string }) => {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      await deleteDoc(doc(db, "progress", id));
+      await deleteDoc(doc(db, collectionName, id));
       toast.success("Deleted successfully");
     } catch (error) {
       toast.error("Delete failed");
@@ -168,16 +173,50 @@ export const ContentManager = ({ section }: { section: string }) => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-serif text-charcoal capitalize">{section.replace(/-/g, " ")} Progress</h2>
-          <p className="text-charcoal/40 text-xs uppercase tracking-widest font-bold mt-2">Manage updates for this stage</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="relative">
+          <button 
+            onClick={() => setShowSectionDropdown(!showSectionDropdown)}
+            className="flex items-center gap-4 group"
+          >
+            <div className="flex flex-col items-start leading-none">
+              <h2 className="text-3xl md:text-5xl font-serif text-charcoal capitalize">
+                {collectionName === "portfolio" ? "Portfolio Showcase" : currentSection.replace(/-/g, " ")}
+              </h2>
+              {collectionName === "progress" && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-gold uppercase tracking-widest text-[10px] font-bold">Select Active Stage</span>
+                  <ChevronDown size={14} className={`text-gold transition-transform ${showSectionDropdown ? "rotate-180" : ""}`} />
+                </div>
+              )}
+            </div>
+          </button>
+
+          {/* Section Dropdown */}
+          {collectionName === "progress" && showSectionDropdown && (
+            <div className="absolute top-full left-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-charcoal/5 overflow-hidden z-[60]">
+              {STAGES.map((stage) => (
+                <button
+                  key={stage.id}
+                  onClick={() => {
+                    setCurrentSection(stage.id);
+                    setShowSectionDropdown(false);
+                  }}
+                  className={`w-full px-6 py-4 text-left text-xs uppercase tracking-widest font-bold transition-colors border-b border-charcoal/5 last:border-0
+                    ${currentSection === stage.id ? "bg-gold text-charcoal" : "text-charcoal/60 hover:bg-charcoal/5 hover:text-charcoal"}`}
+                >
+                  {stage.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-gold text-charcoal px-6 py-3 rounded-xl flex items-center gap-2 font-bold uppercase tracking-widest text-xs hover:bg-gold/80 transition-all shadow-lg shadow-gold/20"
+          className="bg-gold text-charcoal px-8 py-4 rounded-2xl flex items-center gap-2 font-bold uppercase tracking-widest text-xs hover:bg-charcoal hover:text-white transition-all shadow-xl shadow-gold/20"
         >
-          <Plus size={18} /> Add New Update
+          <Plus size={18} /> {editingItem ? "Edit Entry" : "Add New Update"}
         </button>
       </div>
 

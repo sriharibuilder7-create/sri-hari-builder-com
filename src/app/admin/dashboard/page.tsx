@@ -11,8 +11,9 @@ import { Loader2 } from "lucide-react";
 function DashboardContent() {
   const searchParams = useSearchParams();
   const section = searchParams.get("section") || "basement-level";
+  const collectionName = section === "portfolio" ? "portfolio" : "progress";
 
-  return <ContentManager section={section} />;
+  return <ContentManager section={section} collectionName={collectionName} />;
 }
 
 export default function AdminDashboard() {
