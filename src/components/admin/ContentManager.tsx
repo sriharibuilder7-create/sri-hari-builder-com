@@ -20,11 +20,12 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 
-const STAGES = [
-  { id: "basement-level", name: "Basement Level" },
-  { id: "lintel-level", name: "Lintel Level" },
-  { id: "sill-level-concrete", name: "Sill Level" },
-  { id: "still-level-concrete", name: "Still Level" },
+const CATEGORIES = [
+  { id: "portfolio", name: "Portfolio Showcase", collection: "portfolio" },
+  { id: "basement-level", name: "Basement Level", collection: "progress" },
+  { id: "lintel-level", name: "Lintel Level", collection: "progress" },
+  { id: "sill-level-concrete", name: "Sill Level", collection: "progress" },
+  { id: "still-level-concrete", name: "Still Level", collection: "progress" },
 ];
 
 interface ContentItem {
@@ -36,8 +37,11 @@ interface ContentItem {
   createdAt: any;
 }
 
-export const ContentManager = ({ section: initialSection, collectionName = "progress" }: { section: string, collectionName?: string }) => {
+export const ContentManager = ({ section: initialSection }: { section: string }) => {
   const [currentSection, setCurrentSection] = useState(initialSection);
+  const [currentCollection, setCurrentCollection] = useState(
+    CATEGORIES.find(c => c.id === initialSection)?.collection || "progress"
+  );
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +58,7 @@ export const ContentManager = ({ section: initialSection, collectionName = "prog
   useEffect(() => {
     setLoading(true);
     const q = query(
-      collection(db, collectionName),
+      collection(db, currentCollection),
       where("section", "==", currentSection),
       orderBy("createdAt", "desc")
     );
@@ -72,7 +76,7 @@ export const ContentManager = ({ section: initialSection, collectionName = "prog
     });
 
     return () => unsubscribe();
-  }, [currentSection, collectionName]);
+  }, [currentSection, currentCollection]);
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -126,10 +130,10 @@ export const ContentManager = ({ section: initialSection, collectionName = "prog
       };
 
       if (editingItem) {
-        await updateDoc(doc(db, collectionName, editingItem.id), data);
+        await updateDoc(doc(db, currentCollection, editingItem.id), data);
         toast.success("Content updated successfully");
       } else {
-        await addDoc(collection(db, collectionName), {
+        await addDoc(collection(db, currentCollection), {
           ...data,
           createdAt: serverTimestamp(),
         });
@@ -147,7 +151,7 @@ export const ContentManager = ({ section: initialSection, collectionName = "prog
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      await deleteDoc(doc(db, collectionName, id));
+      await deleteDoc(doc(db, currentCollection, id));
       toast.success("Deleted successfully");
     } catch (error) {
       toast.error("Delete failed");
@@ -181,31 +185,31 @@ export const ContentManager = ({ section: initialSection, collectionName = "prog
           >
             <div className="flex flex-col items-start leading-none">
               <h2 className="text-3xl md:text-5xl font-serif text-charcoal capitalize">
-                {collectionName === "portfolio" ? "Portfolio Showcase" : currentSection.replace(/-/g, " ")}
+                {CATEGORIES.find(c => c.id === currentSection)?.name || currentSection.replace(/-/g, " ")}
               </h2>
-              {collectionName === "progress" && (
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-gold uppercase tracking-widest text-[10px] font-bold">Select Active Stage</span>
-                  <ChevronDown size={14} className={`text-gold transition-transform ${showSectionDropdown ? "rotate-180" : ""}`} />
-                </div>
-              )}
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-gold uppercase tracking-widest text-[10px] font-bold">Select Active Category</span>
+                <ChevronDown size={14} className={`text-gold transition-transform ${showSectionDropdown ? "rotate-180" : ""}`} />
+              </div>
             </div>
           </button>
 
-          {/* Section Dropdown */}
-          {collectionName === "progress" && showSectionDropdown && (
-            <div className="absolute top-full left-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-charcoal/5 overflow-hidden z-[60]">
-              {STAGES.map((stage) => (
+          {/* Master Category Dropdown */}
+          {showSectionDropdown && (
+            <div className="absolute top-full left-0 mt-4 w-72 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-charcoal/5 overflow-hidden z-[100]">
+              {CATEGORIES.map((cat) => (
                 <button
-                  key={stage.id}
+                  key={cat.id}
                   onClick={() => {
-                    setCurrentSection(stage.id);
+                    setCurrentSection(cat.id);
+                    setCurrentCollection(cat.collection);
                     setShowSectionDropdown(false);
                   }}
-                  className={`w-full px-6 py-4 text-left text-xs uppercase tracking-widest font-bold transition-colors border-b border-charcoal/5 last:border-0
-                    ${currentSection === stage.id ? "bg-gold text-charcoal" : "text-charcoal/60 hover:bg-charcoal/5 hover:text-charcoal"}`}
+                  className={`w-full px-6 py-4 text-left text-[10px] uppercase tracking-widest font-bold transition-all border-b border-charcoal/5 last:border-0 flex items-center justify-between
+                    ${currentSection === cat.id ? "bg-gold text-charcoal" : "text-charcoal/60 hover:bg-charcoal/5 hover:text-charcoal"}`}
                 >
-                  {stage.name}
+                  {cat.name}
+                  {currentSection === cat.id && <div className="w-1.5 h-1.5 rounded-full bg-charcoal animate-pulse" />}
                 </button>
               ))}
             </div>

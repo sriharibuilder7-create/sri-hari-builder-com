@@ -10,10 +10,9 @@ import { Loader2 } from "lucide-react";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const section = searchParams.get("section") || "basement-level";
-  const collectionName = section === "portfolio" ? "portfolio" : "progress";
+  const section = searchParams.get("section") || "portfolio";
 
-  return <ContentManager section={section} collectionName={collectionName} />;
+  return <ContentManager section={section} />;
 }
 
 export default function AdminDashboard() {
