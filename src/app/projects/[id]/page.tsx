@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Navbar } from "@/components/ui/Navbar";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,8 +65,7 @@ export default function ProjectDetail() {
   }
 
   return (
-    <main className="bg-charcoal min-h-screen text-off-white">
-      <Navbar />
+    <main className="bg-charcoal min-h-screen text-off-white pb-20">
       
       {/* Hero Section */}
       <section className="relative h-[70vh] w-full overflow-hidden">
