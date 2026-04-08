@@ -19,13 +19,13 @@ export const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Projects", href: "/projects" },
-    { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
+    { name: 'Projects', href: '/projects' },
+    { name: 'Contact', href: '/contact' },
   ];
 
-  const MobileAccordion = ({ title, items, onItemClick }: { title: string, items: string[], onItemClick: () => void }) => {
+  const MobileAccordion = ({ title, items, onItemClick }: { title: string, items: any[], onItemClick: () => void }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [active, setActive] = useState("");
     
     return (
       <div className="border-b border-white/5 py-4">
@@ -54,18 +54,28 @@ export const Navbar = () => {
               <div className="pt-6 pb-2 space-y-4">
                 {items.map((item, idx) => (
                   <motion.div
-                    key={item}
+                    key={item.id}
                     initial={{ x: -10, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.05 * idx }}
                   >
-                    <Link 
-                      href="/projects" 
-                      onClick={onItemClick}
-                      className="text-sm uppercase tracking-[0.2em] text-white/50 hover:text-gold flex items-center gap-3 group"
+                    <Link
+                      href={item.href}
+                      onClick={() => { setActive(item.id); onItemClick(); }}
+                      className={`group flex items-center px-6 py-4 transition-all duration-300 ${
+                        active === item.id 
+                          ? 'bg-gold/10 border-r-4 border-gold' 
+                          : 'hover:bg-charcoal/5'
+                      }`}
                     >
-                      <span className="w-4 h-[1px] bg-gold/20 group-hover:w-6 group-hover:bg-gold transition-all" />
-                      {item}
+                      <item.icon className={`mr-4 transition-colors ${
+                        active === item.id ? 'text-gold' : 'text-charcoal/40 group-hover:text-gold'
+                      }`} size={20} />
+                      <span className={`text-[10px] uppercase tracking-widest font-bold ${
+                        active === item.id ? 'text-charcoal' : 'text-charcoal/40 group-hover:text-gold'
+                      }`}>
+                        {item.name}
+                      </span>
                     </Link>
                   </motion.div>
                 ))}

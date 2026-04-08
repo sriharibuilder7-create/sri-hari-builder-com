@@ -17,10 +17,11 @@ interface ProgressItem {
 }
 
 const STAGES = [
-  { id: "basement-level", name: "Basement Level" },
-  { id: "lintel-level", name: "Lintel Level" },
-  { id: "sill-level-concrete", name: "Sill Level" },
-  { id: "still-level-concrete", name: "Still Level" },
+  { id: "portfolio", name: "Completed Projects", collection: "portfolio" },
+  { id: "basement-level", name: "Basement Level", collection: "progress" },
+  { id: "lintel-level", name: "Lintel Level", collection: "progress" },
+  { id: "sill-level-concrete", name: "Sill Level", collection: "progress" },
+  { id: "still-level-concrete", name: "Still Level", collection: "progress" },
 ];
 
 export const ConstructionProgress = () => {
@@ -32,8 +33,11 @@ export const ConstructionProgress = () => {
 
   useEffect(() => {
     setLoading(true);
+    const targetStage = STAGES.find(s => s.id === activeStage);
+    const colName = targetStage?.collection || "progress";
+    
     const q = query(
-      collection(db, "progress"),
+      collection(db, colName),
       where("section", "==", activeStage),
       orderBy("createdAt", "desc")
     );

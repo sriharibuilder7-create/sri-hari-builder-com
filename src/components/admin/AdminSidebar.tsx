@@ -52,41 +52,20 @@ export const AdminSidebar = () => {
       </div>
 
       <nav className="flex-1 p-6 space-y-2">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold mb-6 ml-4">Main Portfolio</div>
-        {navItems.filter(i => i.isMain).map((item) => (
-          <Link 
-            key={item.query}
-            href={`/admin/dashboard?section=${item.query}`}
-            className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-300 group ${
-              pathname === "/admin/dashboard" && currentSection === item.query
-                ? "bg-gold text-charcoal font-bold"
-                : "hover:bg-white/5 text-white/60 hover:text-white"
-            }`}
-          >
-            <span className={pathname === "/admin/dashboard" && currentSection === item.query ? "text-inherit" : "text-gold group-hover:scale-110 transition-transform"}>
-              {item.icon}
-            </span>
-            <span className="text-xs uppercase tracking-widest">{item.name}</span>
-          </Link>
-        ))}
-
-        <div className="pt-8 text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold mb-6 ml-4">Construction Stages</div>
-        {navItems.filter(i => !i.isMain).map((item) => (
-          <Link 
-            key={item.query}
-            href={`/admin/dashboard?section=${item.query}`}
-            className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-300 group ${
-              pathname === "/admin/dashboard" && currentSection === item.query
-                ? "bg-gold text-charcoal font-bold"
-                : "hover:bg-white/5 text-white/60 hover:text-white"
-            }`}
-          >
-            <span className={pathname === "/admin/dashboard" ? "text-inherit" : "text-gold group-hover:scale-110 transition-transform"}>
-              {item.icon}
-            </span>
-            <span className="text-xs uppercase tracking-widest">{item.name}</span>
-          </Link>
-        ))}
+        <div className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold mb-6 ml-4">Universal Control</div>
+        <Link 
+          href="/admin/dashboard"
+          className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-300 group ${
+            pathname === "/admin/dashboard"
+              ? "bg-gold text-charcoal font-bold"
+              : "hover:bg-white/5 text-white/60 hover:text-white"
+          }`}
+        >
+          <span className={pathname === "/admin/dashboard" ? "text-inherit" : "text-gold group-hover:scale-110 transition-transform"}>
+            <LayoutDashboard size={18} />
+          </span>
+          <span className="text-xs uppercase tracking-widest">Master Hub</span>
+        </Link>
       </nav>
 
       <div className="p-6 border-t border-white/5">
