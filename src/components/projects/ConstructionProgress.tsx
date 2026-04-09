@@ -106,10 +106,10 @@ export function ProgressContent() {
           sp => !firebaseData.some(fd => fd.id === sp.id || fd.title === sp.title)
         ) as ProgressItem[];
         finalData = [...firebaseData, ...uniqueStatic];
-        // Shuffle the portfolio for a dynamic look
-        finalData = shuffleArray(finalData);
-      } else if (finalData.length > 0) {
-        // Shuffle other stages if they have content
+      }
+
+      // Universal Shuffle for all categories
+      if (finalData.length > 0) {
         finalData = shuffleArray(finalData);
       }
 
