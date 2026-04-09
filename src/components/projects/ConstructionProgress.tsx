@@ -17,6 +17,30 @@ interface ProgressItem {
   createdAt: any;
 }
 
+const STATIC_PROJECTS = [
+  {
+    id: "1",
+    title: "SHB Emerald",
+    description: "The pinnacle of urban luxury engineered with premium finishes.",
+    imageUrl: "/projects/project1.png",
+    section: "portfolio"
+  },
+  {
+    id: "2",
+    title: "Sri Hari Residency",
+    description: "Contemporary living featuring open-concept layouts and city views.",
+    imageUrl: "/projects/project2.png",
+    section: "portfolio"
+  },
+  {
+    id: "3",
+    title: "Heritage Enclave",
+    description: "Signature villas blending traditional heritage with modern engineering.",
+    imageUrl: "/projects/project3.png",
+    section: "portfolio"
+  }
+];
+
 const STAGES = [
   { id: "portfolio", name: "Completed Projects", collection: "portfolio" },
   { id: "basement-level", name: "Basement Level", collection: "progress" },
@@ -25,7 +49,16 @@ const STAGES = [
   { id: "still-level-concrete", name: "Still Level", collection: "progress" },
 ];
 
-function ProgressContent() {
+const shuffleArray = (array: any[]) => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+export function ProgressContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const categoryParam = searchParams.get('category');
@@ -60,11 +93,27 @@ function ProgressContent() {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
+      const firebaseData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as ProgressItem[];
-      setItems(data);
+
+      let finalData = firebaseData;
+
+      if (activeStage === "portfolio") {
+        // Merge static projects that aren't already in Firebase
+        const uniqueStatic = STATIC_PROJECTS.filter(
+          sp => !firebaseData.some(fd => fd.id === sp.id || fd.title === sp.title)
+        ) as ProgressItem[];
+        finalData = [...firebaseData, ...uniqueStatic];
+        // Shuffle the portfolio for a dynamic look
+        finalData = shuffleArray(finalData);
+      } else if (finalData.length > 0) {
+        // Shuffle other stages if they have content
+        finalData = shuffleArray(finalData);
+      }
+
+      setItems(finalData);
       setLoading(false);
     }, (error) => {
       console.error("Error fetching progress:", error);
