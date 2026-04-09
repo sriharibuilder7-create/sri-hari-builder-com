@@ -33,7 +33,7 @@ export const AboutPreview = () => {
 
           <div className="grid grid-cols-2 gap-8 mb-12">
             <div>
-              <h4 className="text-3xl font-serif text-gold mb-2">28+</h4>
+              <h4 className="text-3xl font-serif text-gold mb-2">18+</h4>
               <p className="text-off-white/90 uppercase tracking-widest text-[10px]">Years of Expertise</p>
             </div>
             <div>
