@@ -82,8 +82,9 @@ export function ProgressContent() {
   const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
 
   useEffect(() => {
-    // Only show loading if we have literally no items yet
-    if (items.length === 0) setLoading(true);
+    // Immediate state reset to stop stale data (the '3 images' glitch)
+    setItems([]);
+    setLoading(true);
 
     const targetStage = STAGES.find(s => s.id === activeStage);
     const colName = targetStage?.collection || "progress";

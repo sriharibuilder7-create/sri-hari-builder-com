@@ -88,11 +88,11 @@ export const ContentManager = ({ section: initialSection }: { section: string })
       unsubscribes.push(onSnapshot(q2, (s) => handleSnapshot(s, 'progress')));
     } else {
       const targetCol = CATEGORIES.find(c => c.id === currentSection)?.collection || "progress";
-      const q = query(
-        collection(db, targetCol),
-        where("section", "==", currentSection),
-        orderBy("createdAt", "desc")
-      );
+      
+      // If portfolio, get all items. If progress, filter by section.
+      const q = currentSection === "portfolio"
+        ? query(collection(db, targetCol), orderBy("createdAt", "desc"))
+        : query(collection(db, targetCol), where("section", "==", currentSection), orderBy("createdAt", "desc"));
 
       unsubscribes.push(onSnapshot(q, (s) => {
         const data = s.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContentItem[];
