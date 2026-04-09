@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,10 +25,26 @@ const STAGES = [
   { id: "still-level-concrete", name: "Still Level", collection: "progress" },
 ];
 
-export const ConstructionProgress = () => {
-  const [activeStage, setActiveStage] = useState(STAGES[0].id);
+function ProgressContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryParam = searchParams.get('category');
+  
+  const [activeStage, setActiveStage] = useState(categoryParam || STAGES[0].id);
   const [items, setItems] = useState<ProgressItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Sync state with URL params
+  useEffect(() => {
+    if (categoryParam && categoryParam !== activeStage) {
+      setActiveStage(categoryParam);
+    }
+  }, [categoryParam]);
+
+  const handleStageChange = (stageId: string) => {
+    setActiveStage(stageId);
+    router.push(`/projects?category=${stageId}`, { scroll: false });
+  };
 
   const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
 
@@ -60,20 +77,22 @@ export const ConstructionProgress = () => {
   return (
     <div className="py-20 md:py-32 bg-charcoal text-off-white min-h-[600px]">
       <div className="container mx-auto px-6 md:px-12">
-        {/* Stage Selector */}
-        <div className="flex flex-wrap justify-center gap-4 mb-20">
-          {STAGES.map((stage) => (
-            <button
-              key={stage.id}
-              onClick={() => setActiveStage(stage.id)}
-              className={`px-6 py-3 rounded-full text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-500 border
-                ${activeStage === stage.id 
-                  ? "bg-gold text-charcoal border-gold shadow-lg shadow-gold/20 scale-105" 
-                  : "bg-white/5 text-off-white/40 border-white/5 hover:border-gold/30 hover:text-gold"}`}
-            >
-              {stage.name}
-            </button>
-          ))}
+        {/* Stage Selector - Refined Mobile Experience */}
+        <div className="mb-16 md:mb-24 px-4 py-2 border border-white/5 bg-white/[0.02] rounded-full backdrop-blur-sm overflow-x-auto no-scrollbar">
+          <div className="flex justify-start md:justify-center items-center gap-2 min-w-max md:min-w-0 px-2">
+            {STAGES.map((stage) => (
+              <button
+                key={stage.id}
+                onClick={() => handleStageChange(stage.id)}
+                className={`px-6 py-2.5 rounded-full text-[9px] md:text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-500 whitespace-nowrap
+                  ${activeStage === stage.id 
+                    ? "bg-gold text-charcoal shadow-lg shadow-gold/20 scale-105" 
+                    : "text-off-white/40 hover:text-gold"}`}
+              >
+                {stage.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Content Display */}
@@ -122,9 +141,9 @@ export const ConstructionProgress = () => {
                     className="group relative"
                   >
                     {/* Refined Split-Card Architecture */}
-                    <div className="flex flex-col h-[550px] md:h-[650px] overflow-hidden rounded-[40px] shadow-2xl border border-white/5 bg-white/5 group transition-all duration-700 hover:border-gold/20">
+                    <div className="flex flex-col h-[500px] md:h-[650px] overflow-hidden rounded-[40px] shadow-2xl border border-white/5 bg-white/5 group transition-all duration-700 hover:border-gold/20">
                       {/* Image Zone (60% Height) */}
-                      <div className="relative h-[60%] w-full overflow-hidden">
+                      <div className="relative h-[55%] md:h-[60%] w-full overflow-hidden">
                         <Image 
                           src={item.imageUrl} 
                           alt={item.title || "Progress Update"} 
@@ -135,22 +154,20 @@ export const ConstructionProgress = () => {
                       </div>
                       
                       {/* Content Zone (40% Height) - Solid & Legible */}
-                      <div className="flex-1 p-8 md:p-10 bg-[#121212] relative overflow-hidden">
-                        <div className="flex flex-col h-full justify-between">
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                              <span className="w-4 h-[1px] bg-gold" />
-                              <span className="text-gold uppercase tracking-[0.4em] text-[8px] font-bold">
-                                {stageName.replace("Progress", "")}
-                              </span>
-                            </div>
-                            <h3 className="text-white text-xl md:text-2xl font-serif leading-tight">
-                              {item.title || "Engineering Milestone"}
-                            </h3>
-                            <p className="text-white/60 text-xs leading-relaxed italic line-clamp-3">
-                              "{item.description}"
-                            </p>
+                      <div className="flex-1 p-8 md:p-10 bg-[#121212] relative overflow-hidden flex flex-col justify-center">
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-3">
+                            <span className="w-4 h-[1px] bg-gold" />
+                            <span className="text-gold uppercase tracking-[0.4em] text-[8px] font-bold">
+                              {stageName.replace("Completed Projects", "Showcase").replace("Level", "Stage")}
+                            </span>
                           </div>
+                          <h3 className="text-white text-xl md:text-2xl font-serif leading-tight">
+                            {item.title || "Engineering Milestone"}
+                          </h3>
+                          <p className="text-white/60 text-xs leading-relaxed italic line-clamp-4 md:line-clamp-6">
+                            "{item.description}"
+                          </p>
                         </div>
                         
                         {/* Decorative background element */}
@@ -167,5 +184,17 @@ export const ConstructionProgress = () => {
         </div>
       </div>
     </div>
+  );
+}
+
+export const ConstructionProgress = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-charcoal flex items-center justify-center">
+        <Loader2 className="animate-spin text-gold" size={48} />
+      </div>
+    }>
+      <ProgressContent />
+    </Suspense>
   );
 };

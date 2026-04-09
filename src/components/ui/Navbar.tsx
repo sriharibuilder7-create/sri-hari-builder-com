@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, Phone, ChevronDown, LayoutGrid, Home, Construction, Hammer, Smartphone, Layers } from "lucide-react";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -171,13 +171,14 @@ export const Navbar = () => {
                   {/* Projects with Sub-menu */}
                   <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="space-y-4">
                     <MobileAccordion 
-                      title="Portfolio Categories" 
-                      items={["Luxury Apartments", "Modern Living", "Premium Villas"]}
-                      onItemClick={() => setIsOpen(false)}
-                    />
-                    <MobileAccordion 
-                      title="Engineering Logs" 
-                      items={["Basement Level", "Lintel Level", "Sill Level", "Still Level"]}
+                      title="Engineering in Motion" 
+                      items={[
+                        { id: 'all', name: "Master Dashboard", href: "/projects", icon: LayoutGrid },
+                        { id: 'portfolio', name: "Portfolio highlights", href: "/projects?category=portfolio", icon: Home },
+                        { id: 'basement-level', name: "Basement Level", href: "/projects?category=basement-level", icon: Construction },
+                        { id: 'lintel-level', name: "Lintel Level", href: "/projects?category=lintel-level", icon: Layers },
+                        { id: 'sill-level-concrete', name: "Sill Level", href: "/projects?category=sill-level-concrete", icon: Hammer },
+                      ]}
                       onItemClick={() => setIsOpen(false)}
                     />
                   </motion.div>
