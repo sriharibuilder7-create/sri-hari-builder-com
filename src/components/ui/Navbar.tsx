@@ -65,14 +65,14 @@ export const Navbar = () => {
                       className={`group flex items-center px-6 py-4 transition-all duration-300 ${
                         active === item.id 
                           ? 'bg-gold/10 border-r-4 border-gold' 
-                          : 'hover:bg-charcoal/5'
+                          : 'hover:bg-white/5'
                       }`}
                     >
                       <item.icon className={`mr-4 transition-colors ${
-                        active === item.id ? 'text-gold' : 'text-charcoal/40 group-hover:text-gold'
+                        active === item.id ? 'text-gold' : 'text-white/40 group-hover:text-gold'
                       }`} size={20} />
                       <span className={`text-[10px] uppercase tracking-widest font-bold ${
-                        active === item.id ? 'text-charcoal' : 'text-charcoal/40 group-hover:text-gold'
+                        active === item.id ? 'text-gold' : 'text-white/60 group-hover:text-gold'
                       }`}>
                         {item.name}
                       </span>
@@ -148,7 +148,7 @@ export const Navbar = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-charcoal/95 backdrop-blur-2xl flex flex-col md:hidden overflow-y-auto"
+            className="fixed inset-0 z-[70] bg-charcoal/95 backdrop-blur-2xl flex flex-col md:hidden overflow-y-auto"
           >
             {/* Background Texture */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
@@ -212,8 +212,8 @@ export const Navbar = () => {
                 
                 <div className="flex justify-between items-center text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold">
                   <span>Coimbatore, TN</span>
-                  <a href="tel:+919876543210" className="text-gold opacity-60 hover:opacity-100 transition-opacity flex items-center gap-2">
-                    <Phone size={10} /> +91 98765 43210
+                  <a href="tel:+919787081184" className="text-gold opacity-60 hover:opacity-100 transition-opacity flex items-center gap-2">
+                    <Phone size={10} /> +91 97870 81184
                   </a>
                 </div>
               </motion.div>

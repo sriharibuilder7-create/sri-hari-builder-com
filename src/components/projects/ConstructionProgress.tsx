@@ -65,6 +65,7 @@ export function ProgressContent() {
   
   const [activeStage, setActiveStage] = useState(categoryParam || STAGES[0].id);
   const [items, setItems] = useState<ProgressItem[]>([]);
+  const [hasSynced, setHasSynced] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Sync state with URL params
@@ -82,8 +83,8 @@ export function ProgressContent() {
   const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
 
   useEffect(() => {
-    // Immediate state reset to stop stale data (the '3 images' glitch)
-    setItems([]);
+    // Start fresh for each category to ensure no stale data
+    setHasSynced(false);
     setLoading(true);
 
     const targetStage = STAGES.find(s => s.id === activeStage);
@@ -117,6 +118,7 @@ export function ProgressContent() {
       }
 
       setItems(finalData);
+      setHasSynced(true);
       setLoading(false);
     }, (error) => {
       console.error("Error fetching progress:", error);
@@ -125,6 +127,7 @@ export function ProgressContent() {
       if (activeStage === "portfolio" && items.length === 0) {
         setItems(shuffleArray([...STATIC_PROJECTS]) as ProgressItem[]);
       }
+      setHasSynced(true);
       setLoading(false);
     });
 
@@ -155,7 +158,23 @@ export function ProgressContent() {
         {/* Content Display */}
         <div className="relative">
           <AnimatePresence mode="wait">
-            {items.length === 0 ? (
+            {!hasSynced ? (
+              <motion.div 
+                key="syncing"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center py-48 gap-6"
+              >
+                <div className="relative">
+                  <Loader2 className="animate-spin text-gold" size={64} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-1 h-1 bg-gold rounded-full animate-ping" />
+                  </div>
+                </div>
+                <p className="text-[10px] uppercase tracking-[0.5em] text-gold/40 animate-pulse">Syncing Architectural Hub</p>
+              </motion.div>
+            ) : items.length === 0 ? (
               <motion.div 
                 key="empty"
                 initial={{ opacity: 0, y: 20 }}
