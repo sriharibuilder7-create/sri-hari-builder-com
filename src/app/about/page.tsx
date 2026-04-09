@@ -108,7 +108,7 @@ export default function AboutPage() {
                </div>
                <h3 className="text-3xl md:text-4xl font-serif mb-6 text-white">Our <span className="text-gold italic">Mission</span></h3>
                <p className="text-off-white/70 text-lg leading-relaxed">
-                 Empowering aspirations through unwavering structural integrity and visionary design. Our mission is built on 18 years of technical mastery, ensuring that every brick laid is a commitment to precision and trust.
+                 Empowering aspirations through unwavering structural integrity and visionary design. Our mission is built on 18 years of architectural and engineering mastery, ensuring that every brick laid is a commitment to precision and trust.
                </p>
              </div>
              <div className="absolute top-0 right-0 p-12 opacity-[0.02] text-white">
@@ -149,7 +149,7 @@ export default function AboutPage() {
                >
                  <div className="flex flex-col gap-2">
                    <span className="text-5xl md:text-7xl font-serif font-bold text-charcoal leading-none">18</span>
-                   <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold text-charcoal/60 leading-tight">Years of<br />Technical Mastery</span>
+                   <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold text-charcoal/60 leading-tight">Years of<br />Architectural & Engineering Mastery</span>
                  </div>
                </motion.div>
              </motion.div>
@@ -203,7 +203,7 @@ export default function AboutPage() {
             transition={{ duration: 1 }}
             viewport={{ once: true }}
          >
-           <h2 className="text-4xl md:text-6xl font-serif mb-8">Unrivaled <span className="text-gold">Engineering</span> Mastery.</h2>
+           <h2 className="text-4xl md:text-6xl font-serif mb-8">Unrivaled <span className="text-gold">Engineering & Architectural</span> Mastery.</h2>
            <p className="text-off-white text-lg leading-relaxed mb-10">
              Our team of world-class architects and engineers combine traditional craftsmanship with futuristic innovation to deliver structures that are as robust as they are beautiful. 
            </p>
