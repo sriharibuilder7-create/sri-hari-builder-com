@@ -6,6 +6,27 @@ import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Loader2, Construction } from "lucide-react";
 
+const STATIC_PROJECTS = [
+  {
+    id: "1",
+    title: "SHB Emerald",
+    description: "The pinnacle of urban luxury engineered with premium finishes.",
+    imageUrl: "/projects/project1.png",
+  },
+  {
+    id: "2",
+    title: "Sri Hari Residency",
+    description: "Contemporary living featuring open-concept layouts and city views.",
+    imageUrl: "/projects/project2.png",
+  },
+  {
+    id: "3",
+    title: "Heritage Enclave",
+    description: "Signature villas blending traditional heritage with modern engineering.",
+    imageUrl: "/projects/project3.png",
+  }
+];
+
 export const ProjectShowcase = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +53,9 @@ export const ProjectShowcase = () => {
     return () => unsubscribe();
   }, []);
 
+  // Combine static and dynamic projects
+  const displayProjects = [...projects, ...STATIC_PROJECTS.filter(sp => !projects.some(p => p.id === sp.id))].slice(0, 6);
+
   return (
     <section className="py-24 md:py-48 bg-off-white text-charcoal">
       <div className="container mx-auto px-6 md:px-12">
@@ -51,14 +75,9 @@ export const ProjectShowcase = () => {
           </Link>
         </div>
 
-        {loading ? (
+        {loading && projects.length === 0 ? (
           <div className="flex justify-center py-24">
             <Loader2 className="animate-spin text-gold" size={48} />
-          </div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-24 bg-charcoal/5 rounded-[40px] border border-charcoal/10">
-            <Construction className="mx-auto text-gold/20 mb-6" size={64} />
-            <h3 className="text-2xl font-serif text-charcoal/40 italic">New portfolio coming soon</h3>
           </div>
         ) : (
           <motion.div 
@@ -71,7 +90,7 @@ export const ProjectShowcase = () => {
               hidden: {}
             }}
           >
-            {projects.map((project) => (
+            {displayProjects.map((project) => (
               <motion.div
                 key={project.id}
                 variants={{
@@ -97,7 +116,7 @@ export const ProjectShowcase = () => {
                         <span className="text-gold uppercase tracking-[0.4em] text-[8px] mb-2 block font-bold truncate">
                           {project.title || "Elite Landmark"}
                         </span>
-                        <h3 className="text-white text-2xl font-serif leading-tight truncate">
+                        <h3 className="text-white text-2xl font-serif leading-tight">
                           {project.description}
                         </h3>
                         <p className="text-white/60 text-[8px] mt-1 uppercase tracking-widest font-bold">
@@ -105,7 +124,7 @@ export const ProjectShowcase = () => {
                         </p>
                       </div>
                       <Link 
-                        href="/contact" 
+                        href={`/projects/${project.id}`} 
                         className="w-12 h-12 rounded-full bg-gold flex items-center justify-center text-charcoal transform transition-transform hover:scale-110 flex-shrink-0"
                       >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
