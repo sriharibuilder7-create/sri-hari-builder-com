@@ -10,6 +10,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     service: "Luxury Residential",
     message: ""
   });
@@ -132,6 +133,17 @@ export default function ContactPage() {
                       required 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                     <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-charcoal/70 ml-1">Phone Number</label>
+                    <input 
+                      type="tel" 
+                      placeholder="Your Phone Number" 
+                      className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20" 
+                      required 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     />
                   </div>
                 </div>
