@@ -6,11 +6,36 @@ import { useState } from "react";
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    service: "Luxury Residential",
+    message: ""
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 5000);
+    setIsLoading(true);
+    
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setIsSubmitted(true);
+      } else {
+        alert("Failed to send inquiry. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("A system error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -89,29 +114,61 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-2">
                     <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-charcoal/70 ml-1">Full Name</label>
-                    <input type="text" placeholder="Your Name" className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20" required />
+                    <input 
+                      type="text" 
+                      placeholder="Your Name" 
+                      className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20" 
+                      required 
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
                   </div>
                   <div className="space-y-2">
                      <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-charcoal/70 ml-1">Email Address</label>
-                    <input type="email" placeholder="Your Email" className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20" required />
+                    <input 
+                      type="email" 
+                      placeholder="Your Email" 
+                      className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20" 
+                      required 
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-charcoal/70 ml-1">Service Type</label>
-                   <select className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal appearance-none">
+                   <select 
+                     className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal appearance-none"
+                     value={formData.service}
+                     onChange={(e) => setFormData({...formData, service: e.target.value})}
+                   >
                      <option>Luxury Residential</option>
                      <option>Premium Commercial</option>
                      <option>Architecture Consulting</option>
+                     <option>General Consulting</option>
                      <option>Interior Design</option>
                    </select>
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-charcoal/70 ml-1">Message</label>
-                  <textarea placeholder="Tell us about your vision..." rows={5} className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20 resize-none" required />
+                  <textarea 
+                    placeholder="Tell us about your vision..." 
+                    rows={5} 
+                    className="w-full bg-transparent border-b border-charcoal/10 pb-4 focus:border-gold outline-none text-charcoal placeholder:text-charcoal/20 resize-none" 
+                    required 
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  />
                 </div>
-                <button type="submit" className="group flex items-center justify-center gap-4 w-full py-5 bg-charcoal text-off-white font-bold uppercase tracking-widest text-xs transition-all duration-300 hover:bg-black overflow-hidden relative">
-                  <span className="relative z-10 font-bold">Send Vision</span>
-                  <Send size={14} className="relative z-10 transition-transform group-hover:translate-x-2" />
+                <button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="group flex items-center justify-center gap-4 w-full py-5 bg-charcoal text-off-white font-bold uppercase tracking-widest text-xs transition-all duration-300 hover:bg-black overflow-hidden relative disabled:opacity-50"
+                >
+                  <span className="relative z-10 font-bold">
+                    {isLoading ? "Capturing Vision..." : "Send Vision"}
+                  </span>
+                  <Send size={14} className={`relative z-10 transition-transform ${isLoading ? 'animate-pulse' : 'group-hover:translate-x-2'}`} />
                 </button>
               </motion.form>
             ) : (
