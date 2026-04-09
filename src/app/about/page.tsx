@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Target, Eye, Shield, Briefcase, Award, Quote } from "lucide-react";
 
 const timeline = [
   { year: "2008", event: "Foundation of Sri Hari Builder & Promoters with a vision for structural perfection." },
@@ -70,27 +71,151 @@ export default function AboutPage() {
         </div>
       </section>
 
+       {/* Mission & Vision Section */}
+       <section className="py-24 md:py-48 container mx-auto px-6 md:px-12">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <motion.div
+             initial={{ opacity: 0, x: -30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             transition={{ duration: 1 }}
+             viewport={{ once: true }}
+             className="p-12 bg-white/[0.03] border border-white/10 rounded-[40px] backdrop-blur-xl relative overflow-hidden group hover:border-gold/30 transition-all duration-700"
+           >
+             <div className="relative z-10">
+               <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-8 text-gold group-hover:scale-110 transition-transform">
+                 <Eye size={32} />
+               </div>
+               <h3 className="text-3xl md:text-4xl font-serif mb-6 text-white">Our <span className="text-gold italic">Vision</span></h3>
+               <p className="text-off-white/70 text-lg leading-relaxed">
+                 To architect a future where every project stands as a testament to engineering perfection and luxurious transparency. We aim to redefine Coimbatore&apos;s skyline through structurally superior landmarks that endure for generations.
+               </p>
+             </div>
+             <div className="absolute top-0 right-0 p-12 opacity-[0.02] text-white">
+               <Eye size={200} />
+             </div>
+           </motion.div>
+
+           <motion.div
+             initial={{ opacity: 0, x: 30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             transition={{ duration: 1 }}
+             viewport={{ once: true }}
+             className="p-12 bg-white/[0.03] border border-white/10 rounded-[40px] backdrop-blur-xl relative overflow-hidden group hover:border-gold/30 transition-all duration-700"
+           >
+             <div className="relative z-10">
+               <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-8 text-gold group-hover:scale-110 transition-transform">
+                 <Target size={32} />
+               </div>
+               <h3 className="text-3xl md:text-4xl font-serif mb-6 text-white">Our <span className="text-gold italic">Mission</span></h3>
+               <p className="text-off-white/70 text-lg leading-relaxed">
+                 Empowering aspirations through unwavering structural integrity and visionary design. Our mission is built on 18 years of technical mastery, ensuring that every brick laid is a commitment to precision and trust.
+               </p>
+             </div>
+             <div className="absolute top-0 right-0 p-12 opacity-[0.02] text-white">
+               <Target size={200} />
+             </div>
+           </motion.div>
+         </div>
+       </section>
+
+       {/* Founder Profile Section */}
+       <section className="py-24 md:py-48 bg-charcoal border-y border-white/5 overflow-hidden">
+         <div className="container mx-auto px-6 md:px-12">
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+             <motion.div
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               transition={{ duration: 1.2 }}
+               viewport={{ once: true }}
+               className="relative"
+             >
+               <div className="relative h-[600px] md:h-[800px] overflow-hidden rounded-[80px] border border-white/10 shadow-2xl group">
+                 <Image 
+                   src="/WhatsApp Image 2026-04-08 at 11.14.47 PM.jpeg" 
+                   alt="Er. N Sivakumar B.tech" 
+                   fill
+                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                   priority
+                 />
+                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent opacity-60" />
+               </div>
+               
+               {/* Experience Badge */}
+               <motion.div 
+                 initial={{ y: 20, opacity: 0 }}
+                 whileInView={{ y: 0, opacity: 1 }}
+                 transition={{ delay: 0.5 }}
+                 className="absolute -bottom-10 -right-6 md:bottom-20 md:-right-10 bg-gold p-8 md:p-12 rounded-[40px] shadow-2xl border-8 border-charcoal max-w-[280px]"
+               >
+                 <div className="flex flex-col gap-2">
+                   <span className="text-5xl md:text-7xl font-serif font-bold text-charcoal leading-none">18</span>
+                   <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold text-charcoal/60 leading-tight">Years of<br />Technical Mastery</span>
+                 </div>
+               </motion.div>
+             </motion.div>
+
+             <motion.div
+               initial={{ opacity: 0, x: 50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               transition={{ duration: 1 }}
+               viewport={{ once: true }}
+               className="space-y-12"
+             >
+               <div>
+                 <span className="text-gold uppercase tracking-[0.5em] text-xs font-bold mb-6 inline-block">Founder & Managing Director</span>
+                 <h2 className="text-5xl md:text-7xl font-serif text-white mb-6">Er. N Sivakumar <span className="text-gold text-2xl md:text-4xl align-top italic opacity-80 block md:inline mt-2 md:mt-0">B.tech</span></h2>
+                 <p className="text-xl md:text-2xl text-off-white/80 leading-relaxed font-serif italic">
+                   "A building's true strength isn't just in its reinforcement, but in the reputation it upholds for decades to come."
+                 </p>
+               </div>
+
+               <div className="space-y-8">
+                 <p className="text-lg text-off-white/60 leading-relaxed">
+                   With nearly two decades of intensive experience in high-performance engineering and architectural innovation, Er. N Sivakumar has pioneered some of Coimbatore's most structurally resilient landmarks. 
+                 </p>
+                 <p className="text-lg text-off-white/60 leading-relaxed">
+                   Under his visionary leadership, Sri Hari Builder & Promoters has evolved into a powerhouse of technical precision, where architectural boldenss meets uncompromised structural integrity.
+                 </p>
+               </div>
+
+               <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/10">
+                 <div>
+                   <div className="text-gold mb-2"><Briefcase size={24} /></div>
+                   <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-sans">Engineering</h4>
+                   <p className="text-off-white/40 text-xs">Structural Perfection</p>
+                 </div>
+                 <div>
+                   <div className="text-gold mb-2"><Award size={24} /></div>
+                   <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-sans">Legacy</h4>
+                   <p className="text-off-white/40 text-xs">Built on Reputation</p>
+                 </div>
+               </div>
+             </motion.div>
+           </div>
+         </div>
+       </section>
+
        {/* Expertise Section */}
        <section className="py-24 md:py-48 container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <motion.div
-           initial={{ opacity: 0, x: -50 }}
-           whileInView={{ opacity: 1, x: 0 }}
-           transition={{ duration: 1 }}
-           viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-6xl font-serif mb-8">Unrivaled <span className="text-gold">Engineering</span> Mastery.</h2>
-          <p className="text-off-white text-lg leading-relaxed mb-10">
-            Our team of world-class architects and engineers combine traditional craftsmanship with futuristic innovation to deliver structures that are as robust as they are beautiful. 
-          </p>
-          <div className="space-y-6">
-            {["Precision Structural Engineering", "Sustainable Material Integration", "Advanced Smart-Home Systems"].map((item, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className="w-2 h-2 bg-gold rounded-full" />
-                <span className="text-off-white/80 uppercase tracking-widest text-sm">{item}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+         <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+         >
+           <h2 className="text-4xl md:text-6xl font-serif mb-8">Unrivaled <span className="text-gold">Engineering</span> Mastery.</h2>
+           <p className="text-off-white text-lg leading-relaxed mb-10">
+             Our team of world-class architects and engineers combine traditional craftsmanship with futuristic innovation to deliver structures that are as robust as they are beautiful. 
+           </p>
+           <div className="space-y-6">
+             {["Structural Integrity First", "Sustainable Material Integration", "Advanced Smart-Home Systems"].map((item, idx) => (
+               <div key={idx} className="flex items-center gap-4">
+                 <div className="w-2 h-2 bg-gold rounded-full" />
+                 <span className="text-off-white/80 uppercase tracking-widest text-sm">{item}</span>
+               </div>
+             ))}
+           </div>
+         </motion.div>
         
         <div className="relative h-[400px] md:h-[600px] overflow-hidden rounded-2xl group border border-white/10 shadow-2xl">
           <Image 
