@@ -59,47 +59,33 @@ export const ContentManager = ({ section: initialSection }: { section: string })
 
   useEffect(() => {
     setLoading(true);
-    
-    const fetchPromises = [];
-    if (currentCollection === "both" || currentCollection === "portfolio") {
-      const q = query(collection(db, "portfolio"), orderBy("createdAt", "desc"));
-      fetchPromises.push(new Promise((resolve) => onSnapshot(q, (s) => resolve(s.docs.map(doc => ({ id: doc.id, ...doc.data() }))), (e) => resolve([]))));
-    }
-    if (currentCollection === "both" || currentCollection === "progress") {
-      const q = currentSection === "all" 
-        ? query(collection(db, "progress"), orderBy("createdAt", "desc"))
-        : query(collection(db, "progress"), where("section", "==", currentSection), orderBy("createdAt", "desc"));
-      fetchPromises.push(new Promise((resolve) => onSnapshot(q, (s) => resolve(s.docs.map(doc => ({ id: doc.id, ...doc.data() }))), (e) => resolve([]))));
-    }
+    const unsubscribes: (() => void)[] = [];
 
-    const unsubscribes: any[] = [];
-    
-    // For "All" view we combine both
+    const handleSnapshot = (snapshot: any, type: 'portfolio' | 'progress') => {
+      const newData = snapshot.docs.map((doc: any) => ({
+        id: doc.id,
+        type,
+        ...doc.data()
+      })) as ContentItem[];
+
+      setItems(prev => {
+        // Merge without duplicates using Map for O(1) lookups
+        const allItems = [...prev.filter(item => (item as any).type !== type), ...newData];
+        const uniqueMap = new Map();
+        allItems.forEach(item => uniqueMap.set(item.id, item));
+        
+        return Array.from(uniqueMap.values())
+          .sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      });
+      setLoading(false);
+    };
+
     if (currentSection === "all") {
-       const q1 = query(collection(db, "portfolio"), orderBy("createdAt", "desc"));
-       const q2 = query(collection(db, "progress"), orderBy("createdAt", "desc"));
-       
-       const unsub1 = onSnapshot(q1, (s1) => {
-         const pData = s1.docs.map(doc => ({ id: doc.id, type: 'portfolio', ...doc.data() })) as any[];
-         unsubscribes.push(unsub1);
-         setItems(prev => {
-            const others = prev.filter(p => (p as any).type !== 'portfolio');
-            return [...pData, ...others].sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) as ContentItem[];
-         });
-         setLoading(false);
-       });
-
-       const unsub2 = onSnapshot(q2, (s2) => {
-         const progData = s2.docs.map(doc => ({ id: doc.id, type: 'progress', ...doc.data() })) as any[];
-         unsubscribes.push(unsub2);
-         setItems(prev => {
-            const others = prev.filter(p => (p as any).type !== 'progress');
-            return [...progData, ...others].sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)) as ContentItem[];
-         });
-         setLoading(false);
-       });
-
-       return () => { unsub1(); unsub2(); };
+      const q1 = query(collection(db, "portfolio"), orderBy("createdAt", "desc"));
+      const q2 = query(collection(db, "progress"), orderBy("createdAt", "desc"));
+      
+      unsubscribes.push(onSnapshot(q1, (s) => handleSnapshot(s, 'portfolio')));
+      unsubscribes.push(onSnapshot(q2, (s) => handleSnapshot(s, 'progress')));
     } else {
       const targetCol = CATEGORIES.find(c => c.id === currentSection)?.collection || "progress";
       const q = query(
@@ -108,21 +94,18 @@ export const ContentManager = ({ section: initialSection }: { section: string })
         orderBy("createdAt", "desc")
       );
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as ContentItem[];
+      unsubscribes.push(onSnapshot(q, (s) => {
+        const data = s.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContentItem[];
         setItems(data);
         setLoading(false);
-      }, (error: any) => {
+      }, (error) => {
         console.error("Error fetching items:", error);
         setLoading(false);
-      });
-
-      return () => unsubscribe();
+      }));
     }
-  }, [currentSection, currentCollection]);
+
+    return () => unsubscribes.forEach(unsub => unsub());
+  }, [currentSection]);
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {

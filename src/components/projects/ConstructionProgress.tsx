@@ -82,7 +82,9 @@ export function ProgressContent() {
   const stageName = STAGES.find(s => s.id === activeStage)?.name || "Progress";
 
   useEffect(() => {
-    setLoading(true);
+    // Only show loading if we have literally no items yet
+    if (items.length === 0) setLoading(true);
+
     const targetStage = STAGES.find(s => s.id === activeStage);
     const colName = targetStage?.collection || "progress";
     
@@ -119,7 +121,7 @@ export function ProgressContent() {
       console.error("Error fetching progress:", error);
       
       // Fallback for Portfolio even on Error
-      if (activeStage === "portfolio") {
+      if (activeStage === "portfolio" && items.length === 0) {
         setItems(shuffleArray([...STATIC_PROJECTS]) as ProgressItem[]);
       }
       setLoading(false);
