@@ -4,6 +4,7 @@ import { Hero } from "@/components/home/Hero";
 import { AboutPreview } from "@/components/home/AboutPreview";
 import { ProjectShowcase } from "@/components/home/ProjectShowcase";
 import { Services } from "@/components/home/Services";
+import { VideoMarquee } from "@/components/home/VideoMarquee";
 import { Testimonials } from "@/components/home/Testimonials";
 import { CTA } from "@/components/home/CTA";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -20,6 +21,9 @@ export default function Home() {
       </ScrollReveal>
       <ScrollReveal variant="revealRight">
         <ProjectShowcase />
+      </ScrollReveal>
+      <ScrollReveal variant="fadeInUp">
+        <VideoMarquee />
       </ScrollReveal>
       <ScrollReveal variant="scaleUp">
         <Testimonials />
