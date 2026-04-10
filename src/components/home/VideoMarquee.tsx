@@ -61,11 +61,11 @@ export const VideoMarquee = () => {
           {displayVideos.map((video, idx) => (
             <div 
               key={`${video.id}-${idx}`}
-              className="inline-block px-4 w-[300px] md:w-[450px]"
+              className="inline-block px-4 w-[360px] md:w-[450px]"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="relative aspect-video rounded-3xl overflow-hidden group cursor-pointer border border-white/10 shadow-2xl bg-black"
+                className="relative aspect-video rounded-[32px] overflow-hidden group cursor-pointer border border-white/10 shadow-2xl bg-black"
                 onClick={() => setSelectedVideo(video)}
               >
                 <Image 
@@ -79,16 +79,16 @@ export const VideoMarquee = () => {
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500" />
                 
                 {/* Content Overlay - Always Visible */}
-                <div className="absolute inset-0 p-8 flex flex-col justify-between">
+                <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
                   <div className="flex justify-end">
-                    <div className="w-14 h-14 bg-gold text-charcoal rounded-full flex items-center justify-center shadow-2xl scale-110">
-                      <Play size={24} fill="currentColor" />
+                    <div className="w-11 h-11 md:w-14 md:h-14 bg-gold text-charcoal rounded-full flex items-center justify-center shadow-2xl">
+                      <Play className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-white text-xl md:text-2xl font-serif font-bold mb-2 drop-shadow-lg">{video.title}</h3>
-                    <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-gold font-black">
-                      <Youtube size={14} /> Play Showcase
+                    <h3 className="text-white text-lg md:text-2xl font-serif font-bold mb-1 md:mb-2 drop-shadow-lg">{video.title}</h3>
+                    <div className="flex items-center gap-2 text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-gold font-black">
+                      <Youtube className="w-3 h-3 md:w-4 md:h-4" /> Play Showcase
                     </div>
                   </div>
                 </div>
