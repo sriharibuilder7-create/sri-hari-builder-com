@@ -7,11 +7,18 @@ import { ReactNode } from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sri Hari Builder & Promoters | Engineering Excellence & Iconic Landmarks in Coimbatore',
-  description: "Coimbatore's premier engineering house since 2008. Specializing in the construction of architectural landmarks and high-end residential estates with zero compromise on structural integrity.",
-  keywords: 'Sri Hari Builder, Construction Company Coimbatore, Engineering Excellence, Building Contractors, Premier Engineering House, Sri Hari Promoters, Coimbatore Construction',
+  metadataBase: new URL('https://www.sriharibuilder.com'),
+  title: {
+    default: 'Sri Hari Builder & Promoters | Excellence in Engineering & Construction',
+    template: '%s | Sri Hari Builder & Promoters'
+  },
+  description: "Coimbatore's premium construction company since 2008. Specializing in luxury residential projects, robust commercial buildings, and architectural landmarks.",
+  keywords: ['Top Builders in Coimbatore', 'Best Construction Company in Chennai', 'Sri Hari Builder', 'Luxury Homes Coimbatore', 'Construction Contractors Tamil Nadu', 'Engineering Excellence', 'Sri Hari Promoters'],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Sri Hari Builder & Promoters | Premier Engineering House',
+    title: 'Sri Hari Builder & Promoters | Premier Construction House',
     description: "Building generational legacies through architectural beauty and structural precision since 2008.",
     url: 'https://sriharibuilders.com',
     siteName: 'Sri Hari Builder & Promoters',
@@ -45,6 +52,37 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </ConditionalLayout>
             <CustomCursor />
           </LenisProvider>
+          {/* JSON-LD Local Search Engine Schema */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": ["ConstructionBusiness", "LocalBusiness"],
+                "name": "Sri Hari Builder & Promoters",
+                "url": "https://www.sriharibuilder.com",
+                "logo": "https://www.sriharibuilder.com/logo.png",
+                "image": "https://www.sriharibuilder.com/logo.png",
+                "description": "Coimbatore's leading engineering house and construction experts, building architectural landmarks and premium residential projects since 2008.",
+                "foundingDate": "2008",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "7th Street Extension",
+                  "addressLocality": "Gandhipuram",
+                  "addressRegion": "Tamil Nadu",
+                  "addressCountry": "IN"
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": "+91 9787081184",
+                  "contactType": "Customer Service",
+                  "availableLanguage": ["English", "Tamil"]
+                },
+                "areaServed": ["Coimbatore", "Chennai"],
+                "priceRange": "$$$$"
+              })
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/private/',
+      disallow: ['/admin/', '/api/'],
     },
-    sitemap: 'https://sriharibuilders.com/sitemap.xml',
+    sitemap: 'https://www.sriharibuilder.com/sitemap.xml',
   };
 }
